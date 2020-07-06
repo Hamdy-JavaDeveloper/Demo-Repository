@@ -11,6 +11,7 @@ import com.demo.bean.Item;
 
 public interface GenericService<T extends Object> {
 
+	Long findMaxId();
 	T save(T entity);
 	
     T update(T entity);

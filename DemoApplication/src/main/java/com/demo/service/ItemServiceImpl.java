@@ -20,7 +20,7 @@ import com.demo.repository.ItemRepository;
 	@Override
 	public Item save(Item item) {
 		// write any business logic 
-		return itemRepo.save(item);
+		return itemRepo.saveAndFlush(item);
 	}
 
 	@Override
@@ -58,6 +58,18 @@ import com.demo.repository.ItemRepository;
 	public List<Item> findAll() {
 		
 		return itemRepo.findAll();
+	}
+
+	@Override
+	public Long findMaxId() {
+		
+		return itemRepo.findMaxId();
+	}
+
+	@Override
+	public Boolean findItemByItemName(String itemName) {
+		
+		return itemRepo.findItemByItemName(itemName);
 	}
 	
 

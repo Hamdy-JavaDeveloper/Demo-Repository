@@ -35,7 +35,7 @@ private double priceMin;
 @Column(columnDefinition="Decimal(18,3) default '0.000' ")
 private double discountPer;
 @Column(columnDefinition="char(1) default 'Y' ")
-private char taxType;
+private char taxType='Y';
 @Column(columnDefinition="tinyint(1) default '0' ")
 private boolean PriceIncludeTax;
 private String barcode;
