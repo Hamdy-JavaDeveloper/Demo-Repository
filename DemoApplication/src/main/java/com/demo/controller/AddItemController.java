@@ -72,29 +72,26 @@ import javafx.stage.Stage;
 		@FXML
 	    private void addItem(ActionEvent event) throws IOException{
 			
-			
 			try{
 				Item item=getItemFromView();
 						
-				if (!CheckItemExist(txtItemName.getText().toString())){ 
+				if (isItemExist(txtItemName.getText().toString())==true){ 
 					Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
 					result.ifPresent(response ->{
-						if (response==ButtonType.OK){
-							//item.setItemName(txtItemName.getText().trim().toString());
+					if (response==ButtonType.OK){
 							itemService.save(item);
 							AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
-						}else if (response==ButtonType.CANCEL){
+					}else if (response==ButtonType.CANCEL){
 							txtItemName.clear();
-							txtItemName.setFocusTraversable(true);
+						//	txtItemName.setFocusTraversable(true);
 							txtItemName.requestFocus();
-							
-							
 						}
 							});
-			
 				
-				
-				
+				}else{
+					itemService.save(item);
+					AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
+					cancle(event);
 				}
 			}
 			catch(ExceptionUtil eu){
@@ -104,7 +101,9 @@ import javafx.stage.Stage;
 				AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", e.getMessage());
 				e.printStackTrace();
 			}
+			
 		}
+	
 		
 	
 	@FXML
@@ -144,28 +143,14 @@ import javafx.stage.Stage;
 	
 	private Item getItemFromView() throws ExceptionUtil
 	{
-		
-		
-	 	//item.setItemId(Long.parseLong(txtItemId.getText().trim().toString())); //Auto Increment
-		
-		
-		
-		String itemName=txtItemName.getText().trim().toString();
+	item.setItemId(Long.parseLong(txtItemId.getText().toString()));
+	String itemName=txtItemName.getText().trim().toString();
 		if (itemName== null || itemName.trim().length() == 0) {
-			
 			throw new ExceptionUtil(" ادخل اسم الصنف ");
-			 
-			
-			//if item name already exist
-		
-					
 		}else 
 		{
 		item.setItemName(txtItemName.getText().trim().toString());
 		}
-				
-			
-		
 		
 		if(!txtPrice1.getText().isEmpty() && txtPrice1.getText()!=null){
 			try{	
@@ -226,7 +211,7 @@ import javafx.stage.Stage;
 			}
 			}//end if
 		
-		item.setItemId(Long.parseLong(txtItemId.getText().toString()));	
+			
 	
 		
 			return item;
@@ -252,11 +237,12 @@ import javafx.stage.Stage;
 	txtItemId.setDisable(true);
 	Long maxId=itemService.findMaxId()+1L;
 	txtItemId.setText(maxId.toString());
-		
+	}
+	
 		
 	
 		
-	}
+	
 	@FXML
 	private void cancle(ActionEvent e) throws IOException{
 
@@ -272,15 +258,41 @@ import javafx.stage.Stage;
 		
 		try{
 			
-			txtItemId.setDisable(true);
-			Long maxId=itemService.findMaxId()+1;
-			txtItemId.setText(maxId.toString());
-			itemService.save(getItemFromView());
+			Item item=getItemFromView();
 			
-			//initialize itemId for scound Item
-			maxId=maxId+1;
-			txtItemId.setText(maxId.toString()); 
-			AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
+			if (isItemExist(txtItemName.getText().toString())==true){ 
+				Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
+				result.ifPresent(response ->{
+				if (response==ButtonType.OK){
+					txtItemId.setDisable(true);
+					Long maxId=itemService.findMaxId()+1;
+					txtItemId.setText(maxId.toString());
+					itemService.save(item);
+					//initialize itemId for scound Item
+					maxId=maxId+1;
+					txtItemId.setText(maxId.toString());
+					AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
+				}else if (response==ButtonType.CANCEL){
+						txtItemName.clear();
+						//txtItemName.setFocusTraversable(true);
+						txtItemName.requestFocus();
+					}
+						});
+			
+			
+			
+			} else	{
+				txtItemId.setDisable(true);
+				Long maxId=itemService.findMaxId()+1;
+				txtItemId.setText(maxId.toString());
+				itemService.save(item);
+				//initialize itemId for scound Item
+				maxId=maxId+1;
+				txtItemId.setText(maxId.toString());
+				AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
+				
+			}
+			
 		}
 		catch(ExceptionUtil eu){
 			AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", eu.getMessage() );
@@ -309,16 +321,20 @@ import javafx.stage.Stage;
 		
 	}
 	
-	/**
-	 * 
-	 */
-	private Boolean CheckItemExist(String itemName){
+	
+	private Boolean isItemExist(String itemName){
 		boolean isExits=false;
-		if (!itemService.findItemByItemName(itemName)){
+		if (itemService.findItemByItemName(itemName)==true){
 			isExits=true;
         }
 		return isExits;
 	}
 	
 	
-	}
+}
+	
+
+	
+	
+	
+	
