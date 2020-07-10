@@ -7,20 +7,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
 @Component
-@Entity
 @Data
+@Entity
 
 public class Item {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-private Long itemId;
+	
+	private long itemId;
 private String itemName;
 @Column(columnDefinition="Decimal(13,3) default '0.000' ")
 private double price1;

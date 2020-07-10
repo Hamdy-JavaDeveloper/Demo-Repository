@@ -60,20 +60,21 @@ import javafx.stage.Stage;
 	@FXML private CheckBox chkService;
 	@FXML private CheckBox chkStarted;
 	@FXML private CheckBox chkDead;
-	/**
+/*
 	 * Adding Item to DB
 	 * 
 	 * @param event
 	 * @throws IOException
 	 * @throws ExceptionUtil 
-	 */
-		
+	 
+*/		
 		
 		@FXML
 	    private void addItem(ActionEvent event) throws IOException{
 			
 			try{
-				Item item=getItemFromView();
+				
+				 item=getItemFromView();
 						
 				if (isItemExist(txtItemName.getText().toString())==true){ 
 					Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
@@ -111,39 +112,22 @@ import javafx.stage.Stage;
 			stageManager.switchScene(FxmlView.MAIN);
 		}
 	
-	/*private  boolean isValid(Item item, List<String> errorList) {
-		boolean isValid = true;
-		String itemName=txtItemName.getText().trim();
-		if (itemName== null || itemName.trim().length() == 0) {
-		errorList.add("Item Title must contain minimum one character.");
-		isValid = false;
-		}
-		double price1=Double.parseDouble(txtPrice1.getText().trim());
-		double priceMin=Double.parseDouble(txtPriceMin.getText().trim());
-		double discountPer=Double.parseDouble(txtDiscountPer1.getText().trim());
-		String categroy= cmbCategroy1.getSelectionModel().getSelectedItem().trim();
-		if (categroy== null || categroy.trim().length() == 0) {
-			errorList.add("Item Categroy must contain minimum one character.");
-			isValid = false;
-			}
-		String unit=cmbUnit.getSelectionModel().getSelectedItem().trim();
 		
-		return isValid;
-		}
-	*/
 	
-	/**
+	/*
 	 * get Item propertise from GUI,
 	 * When the method  throws an error message, we catch it.
 	  * We throw a special error message by turning it into a meaningful message.
 	 
 	 * @return Item
 	 * @throws ExceptionUtil
-	 */
+*/	
 	
 	private Item getItemFromView() throws ExceptionUtil
 	{
-	item.setItemId(Long.parseLong(txtItemId.getText().toString()));
+		
+		item.setItemId(Long.parseLong(txtItemId.getText().toString()));
+		System.out.println(item.getItemId()+"ID>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	String itemName=txtItemName.getText().trim().toString();
 		if (itemName== null || itemName.trim().length() == 0) {
 			throw new ExceptionUtil(" ادخل اسم الصنف ");
@@ -215,6 +199,7 @@ import javafx.stage.Stage;
 	
 		
 			return item;
+
 	
 	}
 	
@@ -303,7 +288,7 @@ import javafx.stage.Stage;
 		}
 
 		clearUI();
-	}
+}
 	
 	
 	private void clearUI(){
@@ -329,9 +314,11 @@ import javafx.stage.Stage;
         }
 		return isExits;
 	}
+	}
 	
 	
-}
+		
+	
 	
 
 	

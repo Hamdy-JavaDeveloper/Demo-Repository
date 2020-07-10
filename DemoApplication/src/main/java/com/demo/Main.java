@@ -1,13 +1,14 @@
 	package com.demo;
 	
-	import javafx.application.Application;
-	import javafx.stage.Stage;
 	import org.springframework.boot.autoconfigure.SpringBootApplication;
-	import org.springframework.boot.builder.SpringApplicationBuilder;
-	import org.springframework.context.ConfigurableApplicationContext;
-	
-	import com.demo.cfg.StageManager;
-	import com.demo.view.FxmlView;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import com.demo.cfg.StageManager;
+import com.demo.view.FxmlView;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
 	
 	@SpringBootApplication
 	public class Main extends Application {
