@@ -1,0 +1,65 @@
+
+.textField{
+	-fx-border-color:lightGreen;
+}
+
+.bgcolorDark{
+	-fx-background-color :#007047;
+}
+.headerFont{
+
+-fx-font-family: "Nada";
+	-fx-font-size:18px;
+	  -fx-font-style: oblique;
+	-fx-background-color :#007047;
+
+}
+
+.generalFont{
+
+-fx-font-family: "Nada";
+	-fx-font-size:16px;
+	  -fx-font-style: oblique;
+	  	
+}
+.button.btnFont{
+
+-fx-font-family: "Nada";
+	-fx-font-size:18px;
+	  -fx-font-style: oblique;
+}
+
+
+.button{
+	-fx-background-color :#007047;
+	
+	  
+	
+	 
+		
+}
+.button:hover{
+-fx-background-color : #00C880;
+
+}
+.button:pressed{
+	-fx-background-color :#00C880;
+}
+.button:focused{
+	-fx-background-color :#1B543F;
+	-fx-border-image-insets:0,1,0;
+	-fx-border-color:#ffffff;
+	-fx-border-width:2px,2px,2px,3px;
+	
+	}
+
+body{
+
+-fx-background-color:#00C880;
+	}
+	
+	.bgcolor{
+	-fx-background-color:#00C880;
+	
+	}
+

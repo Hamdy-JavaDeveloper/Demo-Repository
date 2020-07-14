@@ -16,7 +16,7 @@ import lombok.Data;
 @Component
 @Data
 @Entity
-
+@Table(name="items")
 public class Item {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -52,7 +52,7 @@ private String Unit;
 @Column(columnDefinition="Decimal(16,6) default '0.000000' ")
 private double qty;
 @Column(columnDefinition="Decimal(16,6) default '0.000000' ")
-private double reOrederQty;
+private double reorderQty;
 @Column(columnDefinition="tinyint(1) default '0' ")
 private boolean service=false;
 @Column(columnDefinition="tinyint(1) default '0' ")

@@ -1,4 +1,4 @@
-	package com.demo.controller;
+/*	package com.demo.controller;
 	
 	import java.io.IOException;
 import java.net.URL;
@@ -60,14 +60,14 @@ import javafx.stage.Stage;
 	@FXML private CheckBox chkService;
 	@FXML private CheckBox chkStarted;
 	@FXML private CheckBox chkDead;
-/*
+
 	 * Adding Item to DB
 	 * 
 	 * @param event
 	 * @throws IOException
 	 * @throws ExceptionUtil 
 	 
-*/		
+		
 		
 		@FXML
 	    private void addItem(ActionEvent event) throws IOException{
@@ -75,8 +75,7 @@ import javafx.stage.Stage;
 			try{
 				
 				 item=getItemFromView();
-						
-				if (isItemExist(txtItemName.getText().toString())==true){ 
+					if (isItemExist(txtItemName.getText().toString())==true){ 
 					Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
 					result.ifPresent(response ->{
 					if (response==ButtonType.OK){
@@ -109,19 +108,19 @@ import javafx.stage.Stage;
 	
 	@FXML
 	private void get(ActionEvent event) throws IOException{
-			stageManager.switchScene(FxmlView.MAIN);
+			stageManager.switchScene(FxmlView.ADDITEM);
 		}
 	
 		
 	
-	/*
+	
 	 * get Item propertise from GUI,
 	 * When the method  throws an error message, we catch it.
 	  * We throw a special error message by turning it into a meaningful message.
 	 
 	 * @return Item
 	 * @throws ExceptionUtil
-*/	
+	
 	
 	private Item getItemFromView() throws ExceptionUtil
 	{
@@ -189,7 +188,7 @@ import javafx.stage.Stage;
 		if (!txtReOrederQty.getText().isEmpty()){
 			try{
 			if(Double.parseDouble(txtReOrederQty.getText().trim())>0)
-						item.setReOrederQty(Double.parseDouble(txtReOrederQty.getText().trim()));
+						item.setReorderQty(Double.parseDouble(txtReOrederQty.getText().trim()));
 			}catch (NumberFormatException nfe){
 				throw new ExceptionUtil("ادخل نسبة الخصم بشكل مناسب");
 			}
@@ -230,9 +229,7 @@ import javafx.stage.Stage;
 	
 	@FXML
 	private void cancle(ActionEvent e) throws IOException{
-
-		    
-		    Stage stage = (Stage) btnCancel.getScene().getWindow();
+	    Stage stage = (Stage) btnCancel.getScene().getWindow();
 		    stage.close();
 		}
 	
@@ -324,4 +321,4 @@ import javafx.stage.Stage;
 	
 	
 	
-	
+	*/

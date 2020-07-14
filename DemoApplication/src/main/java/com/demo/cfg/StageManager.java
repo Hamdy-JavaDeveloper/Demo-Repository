@@ -34,8 +34,8 @@ public class StageManager {
     
     private void show(final Parent rootnode, String title) {
         Scene scene = prepareScene(rootnode);
-        //scene.getStylesheets().add("/styles/Styles.css");
-        
+      // scene.getStylesheets().add("/style/style.css");
+		//scene.getStylesheets().add(getClass().getResource("/styles/Styles.css").toExternalForm());
         //primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);

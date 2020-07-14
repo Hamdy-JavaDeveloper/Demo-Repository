@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 		public void start(Stage stage) throws Exception {
 			try {
 				stageManager = springContext.getBean(StageManager.class, stage);
-				System.out.println("springContext.getBean(StageManager.class, stage)---> is done;");
+				System.out.println("springContext.getBean(StageManager.class, stage)------------------- running>;");
 				displayInitialScene();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -47,7 +47,7 @@ import javafx.stage.Stage;
 		 * window.
 		 */
 		protected void displayInitialScene() {
-			stageManager.switchScene(FxmlView.ADDITEM);
+			stageManager.switchScene(FxmlView.ADDNEWITEM);
 		}
 	
 		private ConfigurableApplicationContext springBootApplicationContext() {

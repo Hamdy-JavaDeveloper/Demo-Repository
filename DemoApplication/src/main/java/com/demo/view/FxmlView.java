@@ -4,15 +4,15 @@ import java.util.ResourceBundle;
 
 public enum FxmlView {
 
-	MAIN {
+	ADDNEWITEM {
         @Override
 		public String getTitle() {
-            return getStringFromResourceBundle("emp.title");
+            return getStringFromResourceBundle("AddNewItem.title");
         }
 
         @Override
 		public String getFxmlFile() {
-            return "/fxml/Emp.fxml";
+            return "/fxml/AddNewItem.fxml";
         }
     }, 
     ITEMS{
@@ -39,7 +39,18 @@ public enum FxmlView {
             
 
     }
+    },	TEST{
+        @Override
+		public String getTitle() {
+            return getStringFromResourceBundle("testTb.title");
+        }
 
+        @Override
+		public String getFxmlFile() {
+            return "/fxml/testTb.fxml";
+            
+        }
+	
         };
     
     public abstract String getTitle();
