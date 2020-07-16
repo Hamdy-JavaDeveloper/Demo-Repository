@@ -1,6 +1,9 @@
 package com.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +15,19 @@ public class StoreServiceImpl implements StoreService {
 	
 	@Autowired
 	StoreRepository storeRepository;
-
+/**
+ * initDB() create Primary Store
+ */
+	
+	@PostConstruct
+	public void initDB()
+	{
+	//List<Store> stores=new ArrayList<>();
+	//stores.add(new Store(1L,1L,true,"General Store"));
+	
+	storeRepository.save(new Store(1L,1L,true,"General Store"));
+	}
+	
 	@Override
 	public Long findMaxId() {
 		// TODO Auto-generated method stub
@@ -59,6 +74,12 @@ public class StoreServiceImpl implements StoreService {
 	public List<Store> findAll() {
 		
 		return storeRepository.findAll();
+	}
+
+	@Override
+	public List<Store> findAllByActiveIs(boolean active) {
+		// TODO Auto-generated method stub
+		return storeRepository.findAllByActiveIs(true);
 	}
 
 }

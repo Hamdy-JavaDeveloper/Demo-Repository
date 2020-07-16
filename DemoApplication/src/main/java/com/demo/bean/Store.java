@@ -9,9 +9,13 @@ import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 @Component
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="stores")
 public class Store {
@@ -22,11 +26,13 @@ public class Store {
 	@Column(columnDefinition="int(11) default '0' ")
 	private Long sn;
 	
-	@Column(nullable=true)
-	private String storeName;
 	
 	@Column(columnDefinition="tinyint(1) default '0' ")
 	private boolean active;
+	
+	@Column(nullable=true)
+	private String storeName;
+	
 	
 
 }

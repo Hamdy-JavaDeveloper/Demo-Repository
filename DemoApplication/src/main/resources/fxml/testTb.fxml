@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.controller.TestTbController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <GridPane prefHeight="400.0" prefWidth="600.0">
         <columnConstraints>
@@ -32,7 +32,7 @@
             </TableView>
             <TextField fx:id="txxItemId" prefHeight="26.0" prefWidth="359.0" />
             <Button fx:id="btnAdd" mnemonicParsing="false" prefHeight="26.0" prefWidth="592.0" text="add to db" GridPane.rowIndex="2" />
-            <Button fx:id="btnSave" mnemonicParsing="false" onAction="#addToDB" prefHeight="26.0" prefWidth="261.0" text="save" GridPane.rowIndex="3" />
+            <Button fx:id="btnSave" mnemonicParsing="false" prefHeight="26.0" prefWidth="261.0" text="save" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

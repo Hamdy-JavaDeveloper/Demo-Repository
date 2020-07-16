@@ -47,7 +47,7 @@ public enum FxmlView {
 
         @Override
 		public String getFxmlFile() {
-            return "/fxml/testTb.fxml";
+            return "/fxml/Emp.fxml";
             
         }
 	

@@ -8,10 +8,14 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
+import com.demo.Main;
 import com.demo.bean.Item;
+import com.demo.bean.ItemUnit;
 import com.demo.bean.Store;
 import com.demo.bean.StoreItem;
 import com.demo.cfg.StageManager;
@@ -20,8 +24,8 @@ import com.demo.service.StoreItemService;
 import com.demo.service.StoreService;
 import com.demo.util.AlertUtil;
 import com.demo.util.ExceptionUtil;
+import com.demo.view.FxmlView;
 
-import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -42,14 +46,17 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
 
 @Controller
-public class AddNewItemController implements Initializable {
-	 	@FXML
+public class AddNewItemController  implements Initializable {
+	@FXML
+	private Button btnAddNewUnit;
+	@FXML
 	    private TextField txtItemId; 
 	 	@FXML
 	    private TextField txtItemName;
@@ -97,18 +104,30 @@ public class AddNewItemController implements Initializable {
 	    private Button btnItemSave;
 	    @FXML
 	    private Button btnItemCancel;
-	    ObservableList<StoreItem> tbViewData=FXCollections.observableArrayList();
 	    
 	    
+		@FXML   private TableView<ItemUnit> tbItemUnit;
+		@FXML   private TableColumn<ItemUnit, String> colUnitName;
+		@FXML   private TableColumn<ItemUnit, Double> colUnitQty;
+		@FXML   private TableColumn<ItemUnit, Double> colUnitPrice;
+		ObservableList<ItemUnit> unitsData=FXCollections.observableArrayList();  
+		
+
 	    @FXML   private TableView<StoreItem> tbStoreItem;
 	    @FXML   private TableColumn<StoreItem, Long> colStoreId;
 	    @FXML   private TableColumn<StoreItem, String> colStoreName;
 	    @FXML   private TableColumn<StoreItem, Double> colItemQty;
 	    @FXML   private TableColumn<StoreItem, Double> colItemAvgCost;
-
-	    @Lazy
-		@Autowired
-		private StageManager stageManager;
+	    ObservableList<StoreItem> tbViewData=FXCollections.observableArrayList();
+		/*
+		 * @Lazy
+		 * 
+		 * @Autowired private StageManager stageManager;
+		 */
+	    
+	    protected ConfigurableApplicationContext springContext;
+		protected StageManager stageManager;
+	    
 	    @Autowired
 	    Item item;
 	    
@@ -118,10 +137,11 @@ public class AddNewItemController implements Initializable {
 	    @Autowired    ItemService itemService;
 	    @Autowired    StoreItemService	storeItemService;
 	    
-	    
-	  private  ObservableList<StoreItem> getStoreNameObserverableList() {
-	    	List<Store> stores=storeService.findAll();
-			
+	  
+	 
+private  ObservableList<StoreItem> getStoreNameObserverableList() {
+	   List<Store> stores=storeService.findAllByActiveIs(true);
+		
 			Iterator<Store> iterator=stores.iterator();
 			
 			while(iterator.hasNext())
@@ -139,7 +159,11 @@ public class AddNewItemController implements Initializable {
 	    
 	    @Override
 	    public void initialize(URL location, ResourceBundle resources) {
-/*    	Platform.runLater(new Runnable() {
+
+	    	colUnitName.setCellValueFactory(new PropertyValueFactory<>("unit"));
+	    	colUnitQty.setCellValueFactory(new PropertyValueFactory<>("pieces"));
+	    	colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+	    	/*    	Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
 				tbStoreItem.requestFocus();
@@ -150,7 +174,58 @@ public class AddNewItemController implements Initializable {
 			});
 			
 */
+	    	colItemQty.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
+
+
+				@Override
+				public ObservableValue<Double> call(CellDataFeatures<StoreItem, Double> param) {
+					// TODO Auto-generated method stub
+					return new ObservableValue<Double>() {
+
+						@Override
+						public void addListener(InvalidationListener listener) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void removeListener(InvalidationListener listener) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void addListener(ChangeListener<? super Double> listener) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void removeListener(ChangeListener<? super Double> listener) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public Double getValue() {
+
+							return param.getValue().getQty();
+						}
+						
+					};
+				}
+			
 	    	
+	    	
+	    	});
+	    	colItemQty.setCellFactory(new TextFieldTableCell().forTableColumn(new DoubleStringConverter()));
+			colItemQty.setOnEditCommit(e -> colQtyOnEdit(e));
+				
+	    	
+	    	
+	    	
+	    	
+	  
 
 
 	    	colStoreId.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Long>, ObservableValue<Long>>() {
@@ -238,53 +313,7 @@ public class AddNewItemController implements Initializable {
 	    	
 	    	});
 	    	
-	    	colItemQty.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
-
-
-				@Override
-				public ObservableValue<Double> call(CellDataFeatures<StoreItem, Double> param) {
-					// TODO Auto-generated method stub
-					return new ObservableValue<Double>() {
-
-						@Override
-						public void addListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void addListener(ChangeListener<? super Double> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(ChangeListener<? super Double> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public Double getValue() {
-
-							return param.getValue().getQty();
-						}
-						
-					};
-				}
-			
 	    	
-	    	
-	    	});
-	    	colItemQty.setCellFactory(new TextFieldTableCell().forTableColumn(new DoubleStringConverter()));
-			colItemQty.setOnEditCommit(e -> colQtyOnEdit(e));
-				
 			colItemAvgCost.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
 				
 
@@ -330,40 +359,26 @@ public class AddNewItemController implements Initializable {
 			colItemAvgCost.setOnEditCommit(e -> colCostAvgOnEdit(e));
 	    	    
 			
-			
-			
-			/*
-			 * List<Store> stores=storeService.findAll();
-			 * 
-			 * Iterator<Store> iterator=stores.iterator();
-			 * 
-			 * while(iterator.hasNext()) { StoreItem si=new StoreItem();
-			 * 
-			 * si.setStore((Store)iterator.next()); si.setItem(item); tbViewData.add(si);
-			 * System.out.println("storeName:="+si.getStore().getStoreName()); }
-			 */
+					
 			tbViewData=getStoreNameObserverableList();
 			tbStoreItem.setItems(tbViewData);
-			
-			
-			
-			
-	    	/*System.out.print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-		List<Item> items =itemService.findAll();
+			Long maxId=itemService.findMaxId()+1L;
+			txtItemId.setText(maxId.toString());
 		
-		Iterator<Item> iterator=items.iterator();
-		List<String> unitName=new ArrayList<String>();
-		while(iterator.hasNext()){
-			Item i=(Item)iterator.next();
-			unitName.add(i.getUnit());
-		}*/
-		//cmbUnit.getItems().addAll(unitName);
-		 	    	
-	//	txtItemId.setDisable(true);
-		Long maxId=itemService.findMaxId()+1L;
-		txtItemId.setText(maxId.toString());
-		
-	}
+	}//end initilize method 
+	    
+	    
+	   /**
+	    * This method is to test the connection between two fxml files 
+	    * @param e
+	    * @throws IOException
+	    */
+	    @FXML public void addUnit(ActionEvent e) throws IOException {
+	    	
+	    	    	  stageManager.switchScene(FxmlView.TEST);
+	    	  
+	    	  }
+	    
 	    
 		
 	
@@ -595,6 +610,8 @@ public class AddNewItemController implements Initializable {
 		    
 		    Stage stage = (Stage) btnItemCancel.getScene().getWindow();
 		    stage.close();
+		    
+		    System.exit(0);
 	
 		}
 	
