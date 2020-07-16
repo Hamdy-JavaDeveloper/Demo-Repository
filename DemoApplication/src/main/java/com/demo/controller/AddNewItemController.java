@@ -8,12 +8,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
-import com.demo.Main;
 import com.demo.bean.Item;
 import com.demo.bean.ItemUnit;
 import com.demo.bean.Store;
@@ -51,6 +48,8 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
+
+
 
 @Controller
 public class AddNewItemController  implements Initializable {
@@ -119,17 +118,11 @@ public class AddNewItemController  implements Initializable {
 	    @FXML   private TableColumn<StoreItem, Double> colItemQty;
 	    @FXML   private TableColumn<StoreItem, Double> colItemAvgCost;
 	    ObservableList<StoreItem> tbViewData=FXCollections.observableArrayList();
-		/*
-		 * @Lazy
-		 * 
-		 * @Autowired private StageManager stageManager;
-		 */
-	    
-	    protected ConfigurableApplicationContext springContext;
-		protected StageManager stageManager;
-	    
-	    @Autowired
-	    Item item;
+		
+		 @Lazy
+		 @Autowired private StageManager stageManager;
+		 
+		@Autowired	    Item item;
 	    
 	    @Autowired    StoreItem storeItem;
 	    @Autowired    Store store;
@@ -159,206 +152,19 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 	    
 	    @Override
 	    public void initialize(URL location, ResourceBundle resources) {
-
-	    	colUnitName.setCellValueFactory(new PropertyValueFactory<>("unit"));
-	    	colUnitQty.setCellValueFactory(new PropertyValueFactory<>("pieces"));
-	    	colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-	    	/*    	Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-				tbStoreItem.requestFocus();
-				tbStoreItem.getSelectionModel().select(0);
-				tbStoreItem.getFocusModel().focus(0);
-					
-				}
-			});
-			
-*/
-	    	colItemQty.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
-
-
-				@Override
-				public ObservableValue<Double> call(CellDataFeatures<StoreItem, Double> param) {
-					// TODO Auto-generated method stub
-					return new ObservableValue<Double>() {
-
-						@Override
-						public void addListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void addListener(ChangeListener<? super Double> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(ChangeListener<? super Double> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public Double getValue() {
-
-							return param.getValue().getQty();
-						}
-						
-					};
-				}
-			
 	    	
+	    	loadItemTableViews();
 	    	
-	    	});
-	    	colItemQty.setCellFactory(new TextFieldTableCell().forTableColumn(new DoubleStringConverter()));
-			colItemQty.setOnEditCommit(e -> colQtyOnEdit(e));
-				
-	    	
-	    	
-	    	
-	    	
-	  
+			/*
+			 * Platform.runLater(new Runnable() {
+			 * 
+			 * @Override public void run() { tbStoreItem.requestFocus();
+			 * tbStoreItem.getSelectionModel().select(0);
+			 * tbStoreItem.getFocusModel().focus(0);
+			 * 
+			 * } });
+			 */
 
-
-	    	colStoreId.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Long>, ObservableValue<Long>>() {
-	    	
-				
-				@Override
-				public ObservableValue<Long> call(CellDataFeatures<StoreItem, Long> param) {
-					
-					return new ObservableValue<Long>() {
-
-						@Override
-						public void addListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void addListener(ChangeListener<? super Long> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(ChangeListener<? super Long> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public Long getValue() {
-							
-							return param.getValue().getStore().getId();
-						}
-					};
-				}
-			});
-	    	colStoreName.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,String>, ObservableValue<String>>() {
-
-
-				@Override
-				public ObservableValue<String> call(CellDataFeatures<StoreItem, String> param) {
-					
-					return new ObservableValue<String>() {
-
-						@Override
-						public void addListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void addListener(ChangeListener<? super String> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(ChangeListener<? super String> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public String getValue() {
-							
-							return param.getValue().getStore().getStoreName();
-							
-						}
-					};
-				}
-			
-	    	
-	    	
-	    	});
-	    	
-	    	
-			colItemAvgCost.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
-				
-
-				@Override
-				public ObservableValue<Double> call(CellDataFeatures<StoreItem, Double> param) {
-					
-					return new ObservableValue<Double>() {
-
-						@Override
-						public void addListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(InvalidationListener listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void addListener(ChangeListener<? super Double> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void removeListener(ChangeListener<? super Double> listener) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public Double getValue() {
-		
-							return param.getValue().getItem().getAvgCost();
-						}
-						
-					};
-				}
-			});
-	    	colItemAvgCost.setCellFactory(new TextFieldTableCell().forTableColumn(new DoubleStringConverter()));
-			colItemAvgCost.setOnEditCommit(e -> colCostAvgOnEdit(e));
-	    	    
-			
 					
 			tbViewData=getStoreNameObserverableList();
 			tbStoreItem.setItems(tbViewData);
@@ -611,7 +417,7 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 		    Stage stage = (Stage) btnItemCancel.getScene().getWindow();
 		    stage.close();
 		    
-		    System.exit(0);
+		   
 	
 		}
 	
@@ -677,5 +483,194 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 		StoreItem storeItem=ce.getRowValue();
 		storeItem.getItem().setAvgCost(Double.parseDouble(ce.getNewValue().toString()));
 		 }
+	public void loadItemTableViews() {
+		colItemQty.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
+
+
+			@Override
+			public ObservableValue<Double> call(CellDataFeatures<StoreItem, Double> param) {
+				// TODO Auto-generated method stub
+				return new ObservableValue<Double>() {
+
+					@Override
+					public void addListener(InvalidationListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removeListener(InvalidationListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void addListener(ChangeListener<? super Double> listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removeListener(ChangeListener<? super Double> listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public Double getValue() {
+
+						return param.getValue().getQty();
+					}
+					
+				};
+			}
+		
+    	
+    	
+    	});
+    	colItemQty.setCellFactory(new TextFieldTableCell().forTableColumn(new DoubleStringConverter()));
+		colItemQty.setOnEditCommit(e -> colQtyOnEdit(e));
+			
+    	
+    	
+    	
+    	
+  
+
+
+    	colStoreId.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Long>, ObservableValue<Long>>() {
+    	
+			
+			@Override
+			public ObservableValue<Long> call(CellDataFeatures<StoreItem, Long> param) {
+				
+				return new ObservableValue<Long>() {
+
+					@Override
+					public void addListener(InvalidationListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removeListener(InvalidationListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void addListener(ChangeListener<? super Long> listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removeListener(ChangeListener<? super Long> listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public Long getValue() {
+						
+						return param.getValue().getStore().getId();
+					}
+				};
+			}
+		});
+    	colStoreName.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,String>, ObservableValue<String>>() {
+
+
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<StoreItem, String> param) {
+				
+				return new ObservableValue<String>() {
+
+					@Override
+					public void addListener(InvalidationListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removeListener(InvalidationListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void addListener(ChangeListener<? super String> listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removeListener(ChangeListener<? super String> listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public String getValue() {
+						
+						return param.getValue().getStore().getStoreName();
+						
+					}
+				};
+			}
+		
+    	
+    	
+    	});
+    	
+    	
+		colItemAvgCost.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
+			
+
+			@Override
+			public ObservableValue<Double> call(CellDataFeatures<StoreItem, Double> param) {
+				
+				return new ObservableValue<Double>() {
+
+					@Override
+					public void addListener(InvalidationListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removeListener(InvalidationListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void addListener(ChangeListener<? super Double> listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removeListener(ChangeListener<? super Double> listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public Double getValue() {
+	
+						return param.getValue().getItem().getAvgCost();
+					}
+					
+				};
+			}
+		});
+    	colItemAvgCost.setCellFactory(new TextFieldTableCell().forTableColumn(new DoubleStringConverter()));
+		colItemAvgCost.setOnEditCommit(e -> colCostAvgOnEdit(e));
+		
+		colUnitName.setCellValueFactory(new PropertyValueFactory<>("unit"));
+    	colUnitQty.setCellValueFactory(new PropertyValueFactory<>("pieces"));
+    	colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+	}
 
 }
