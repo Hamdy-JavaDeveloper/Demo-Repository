@@ -2,9 +2,11 @@ package com.demo.cfg;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.demo.view.FxmlView;
 
@@ -12,6 +14,7 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 
 /**
  * Manages switching Scenes on the Primary Stage
@@ -24,7 +27,7 @@ public class StageManager {
 
     public StageManager(SpringFXMLLoader springFXMLLoader, Stage stage) {
         this.springFXMLLoader = springFXMLLoader;
-        this.primaryStage = stage;
+        this.primaryStage = new Stage();
     }
 
     public void switchScene(final FxmlView view) {
@@ -51,10 +54,11 @@ public class StageManager {
     
     private Scene prepareScene(Parent rootnode){
         Scene scene = primaryStage.getScene();
+    	
 
-        if (scene == null) {
+        //if (scene == null) {
             scene = new Scene(rootnode);
-        }
+      // }
         scene.setRoot(rootnode);
         return scene;
     }
@@ -81,5 +85,25 @@ public class StageManager {
         LOG.error(errorMsg, exception, exception.getCause());
         Platform.exit();
     }
+
+    public Stage switchScene2(ApplicationContext applicationContext, final FxmlView view) {
+
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(view.getFxmlFile()));
+		fxmlLoader.setControllerFactory(applicationContext::getBean);
+		
+		Parent root1 = null;
+		try {
+			root1 = fxmlLoader.load();
+		} catch (IOException e) {
+			logAndExit("Unable to load FXML view" + view.getFxmlFile(), e);
+
+		}
+		Stage stage = new Stage();
+		stage.setTitle(view.getTitle());
+		stage.setScene(new Scene(root1));
+		stage.show();
+		return stage;
+	}
+
 
 }

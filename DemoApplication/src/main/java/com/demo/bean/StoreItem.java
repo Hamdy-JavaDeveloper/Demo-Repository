@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.stereotype.Component;
 
@@ -35,4 +36,6 @@ public class StoreItem {
 	@Column(columnDefinition="Decimal(16,6) default '0.000000' ",nullable=false)
 	private double qty;
 	
+	@Transient
+	private double avgCost;
 }

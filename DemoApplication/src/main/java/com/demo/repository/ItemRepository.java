@@ -1,5 +1,7 @@
 package com.demo.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,9 @@ import com.demo.bean.Item;
 		Long findMaxId();
 	@Query(value= "select new java.lang.Boolean(count(*)>0) from Item where itemName=?" )
 	   Boolean findItemByItemName(String itemName);
+	
+	@Query(value= "select distinct i.unit from Item i where i.unit !=''" )
+	public List<String>findDistinctByUnit();
 	
 
 }

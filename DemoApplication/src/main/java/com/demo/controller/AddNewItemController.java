@@ -1,5 +1,6 @@
 package com.demo.controller;
 
+import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
@@ -8,6 +9,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
@@ -17,6 +19,7 @@ import com.demo.bean.Store;
 import com.demo.bean.StoreItem;
 import com.demo.cfg.StageManager;
 import com.demo.service.ItemService;
+import com.demo.service.ItemUnitService;
 import com.demo.service.StoreItemService;
 import com.demo.service.StoreService;
 import com.demo.util.AlertUtil;
@@ -37,12 +40,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
@@ -50,12 +57,10 @@ import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
 
 
-
 @Controller
 public class AddNewItemController  implements Initializable {
-	@FXML
-	private Button btnAddNewUnit;
-	@FXML
+	
+		@FXML
 	    private TextField txtItemId; 
 	 	@FXML
 	    private TextField txtItemName;
@@ -103,13 +108,16 @@ public class AddNewItemController  implements Initializable {
 	    private Button btnItemSave;
 	    @FXML
 	    private Button btnItemCancel;
-	    
+	    @FXML
+	    private TextField txtFirst; 
+	 	@FXML
+	    private TextField txtScound;
 	    
 		@FXML   private TableView<ItemUnit> tbItemUnit;
 		@FXML   private TableColumn<ItemUnit, String> colUnitName;
 		@FXML   private TableColumn<ItemUnit, Double> colUnitQty;
 		@FXML   private TableColumn<ItemUnit, Double> colUnitPrice;
-		ObservableList<ItemUnit> unitsData=FXCollections.observableArrayList();  
+		 ObservableList<ItemUnit> itemUnitData=FXCollections.observableArrayList();  
 		
 
 	    @FXML   private TableView<StoreItem> tbStoreItem;
@@ -118,22 +126,39 @@ public class AddNewItemController  implements Initializable {
 	    @FXML   private TableColumn<StoreItem, Double> colItemQty;
 	    @FXML   private TableColumn<StoreItem, Double> colItemAvgCost;
 	    ObservableList<StoreItem> tbViewData=FXCollections.observableArrayList();
-		
+		//AddNewUnit window ===========================================
+
+	    @FXML   private Label lblItemUnitName;
+	    @FXML   private TextField txtUnitPrice;
+	    @FXML   private TextField txtItemQty2;
+	    @FXML   private Button bitUnitCancel;
+	    @FXML   private ComboBox<String> cmbUnitName2;
+	    @FXML   private Button btnAddNewUnit;
+	    @FXML   private TextField txtUnitPices;
+	    @FXML   private RadioButton rdUnitSmaller;
+	    @FXML   private RadioButton rdUnitBigger;
+
+	    //this instance will be use if we want launch scound stage 
+	    @Autowired
+		private ApplicationContext applicationContext;
 		 @Lazy
-		 @Autowired private StageManager stageManager;
+		 @Autowired
+		 private StageManager stageManager;
 		 
 		@Autowired	    Item item;
 	    
-	    @Autowired    StoreItem storeItem;
-	    @Autowired    Store store;
-	    @Autowired    StoreService storeService;
-	    @Autowired    ItemService itemService;
-	    @Autowired    StoreItemService	storeItemService;
+	    @Autowired    private StoreItem storeItem;
+	    @Autowired    private Store store;
+	    @Autowired    private StoreService storeService;
+	    @Autowired    private ItemService itemService;
+	    @Autowired    private StoreItemService	storeItemService;
+	    @Autowired    private ItemUnit itemUnit;
+	    @Autowired    private ItemUnitService itemUnitService;
 	    
 	  
 	 
-private  ObservableList<StoreItem> getStoreNameObserverableList() {
-	   List<Store> stores=storeService.findAllByActiveIs(true);
+	    private  ObservableList<StoreItem> getStoreNameObserverableList() {
+	    	List<Store> stores=storeService.findAllByActiveIs(true);
 		
 			Iterator<Store> iterator=stores.iterator();
 			
@@ -144,18 +169,19 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 				si.setStore((Store)iterator.next());
 				si.setItem(item);
 				si.getItem().setAvgCost(0.0);
+				
 				tbViewData.add(si);
 				System.out.println("storeName:="+si.getStore().getStoreName());
 			}
 			return tbViewData;
 	    }
-	    
+	  
+	  
 	    @Override
 	    public void initialize(URL location, ResourceBundle resources) {
 	    	
-	    	loadItemTableViews();
 	    	
-			/*
+	    	/*
 			 * Platform.runLater(new Runnable() {
 			 * 
 			 * @Override public void run() { tbStoreItem.requestFocus();
@@ -164,25 +190,60 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 			 * 
 			 * } });
 			 */
+	    	
+	    	
+	    	
+	    	if(location.getPath().contains("AddNewItem.fxml") ==true) {
+	    		
+		    		
+	    		loadItemTableViews();
+	    		
+	    		//cmbItemUnit.setValue(cmbItemUnit.getPromptText());
+	    		cmbItemUnit.setValue(null);
+	    		ObservableList<String> unitNames=FXCollections.observableArrayList(itemService.findDistinctByUnit());
+	    		cmbItemUnit.setItems(unitNames);	
+	    		
+	    		
+	    		
 
 					
 			tbViewData=getStoreNameObserverableList();
+			tbStoreItem.getItems().clear();
 			tbStoreItem.setItems(tbViewData);
 			Long maxId=itemService.findMaxId()+1L;
 			txtItemId.setText(maxId.toString());
-		
+	    	
+	    	}
+	    	
+	    	if(location.getPath().contains("AddNewUnit.fxml") ==true) {
+	    		ObservableList<String> unitNames=FXCollections.observableArrayList(itemUnitService.findDistinctByUnit());
+	    		unitNames.addAll(FXCollections.observableArrayList(itemService.findDistinctByUnit()));
+	    		cmbUnitName2.setItems(unitNames);
+	    	}
 	}//end initilize method 
-	    
+	
+	   
+
 	    
 	   /**
 	    * This method is to test the connection between two fxml files 
 	    * @param e
 	    * @throws IOException
 	    */
-	    @FXML public void addUnit(ActionEvent e) throws IOException {
-	    	
-	    	    	  stageManager.switchScene(FxmlView.TEST);
-	    	  
+	   
+	    @FXML public void callWindow(ActionEvent e) throws IOException {
+	    	if(e.getSource()==btnAddNewUnit) {
+	    		stageManager.switchScene(FxmlView.ADDNEWITEM);
+	    		txtItemName.setText(txtFirst.getText());
+	    		
+	    	}
+	    	else if (e.getSource()==btnItemAddUnit)
+	    		stageManager.switchScene(FxmlView.TEST);
+	    		
+	    		
+	     
+	     System.out.println("ok...");
+	    	   
 	    	  }
 	    
 	    
@@ -320,7 +381,7 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 				Long maxId=itemService.findMaxId()+1;
 				txtItemId.setText(maxId.toString());
 				maxId=maxId+1;
-				//initialize itemId for scound Item
+				//initialize itemId for secound Item
 				txtItemId.setText(maxId.toString());
 				double qty=0.0;
 				double avgCost=0.0;
@@ -333,18 +394,33 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 				for(StoreItem storeItem:tbViewData){
 					 if (storeItem.getQty()>0.0){
 						 qty=qty+storeItem.getQty();
-						 avgCost=avgCost+storeItem.getItem().getAvgCost();
-						totalStoreHasQty=totalStoreHasQty+1; 
+						 avgCost=avgCost+storeItem.getAvgCost();
+						 totalStoreHasQty=totalStoreHasQty+1; 
 						flagHasQtys=true;		 
 					 }
-			
+					 
 				}
+				//--------------------
+				
+				for(StoreItem si:tbViewData){
+					System.out.println(si);
+					
+				}
+					
+				
+				
+					
+				//-----------	
 				
 				System.out.println("tbViewData.size=:"+tbViewData.size());
 				
 				
-				if(totalStoreHasQty>0)
+				if(totalStoreHasQty>0) {
 				item.setAvgCost(avgCost/totalStoreHasQty);
+				System.out.println("avgCost="+(avgCost));
+				System.out.println("avgCost/totalStoreHasQty="+(avgCost/totalStoreHasQty));
+				System.out.println("totalStoreHasQty="+totalStoreHasQty);
+				}
 				else
 				item.setAvgCost(avgCost);
 				
@@ -360,15 +436,24 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 				}
 				
 				
-				}//end if(flagHasQtys==true)	
-				AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
 				
+				}//end if(flagHasQtys==true)
+				
+				for(ItemUnit itemUnit :itemUnitData) {
+					itemUnit.setItem(item);
+					itemUnitService.save(itemUnit);
+				}
+				AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
+				itemUnitData.clear();
+				tbItemUnit.setItems(itemUnitData);
 				tbViewData.clear();
 				tbViewData=getStoreNameObserverableList();
 				tbStoreItem.setItems(tbViewData);
 				
 				clearUI();
-		
+				cmbItemUnit.setValue(cmbItemUnit.getPromptText());
+				ObservableList<String> unitNames=FXCollections.observableArrayList(itemService.findDistinctByUnit());
+	    		cmbItemUnit.setItems(unitNames);	
 				flagSave=false;
 				txtItemName.requestFocus();
 			}//end if(flagSave==true)
@@ -415,7 +500,8 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 
 		    
 		    Stage stage = (Stage) btnItemCancel.getScene().getWindow();
-		    stage.close();
+		  //  stage.close();
+		    stage.hide();
 		    
 		   
 	
@@ -450,7 +536,47 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 			}
 			if (flagSaveSuccess)
 			{
+				
+				double qty=0;
+				double avgCost=0;
+				boolean flagHasQtys=false;
+				long totalStoreHasQty=0;
+				
+				for(StoreItem storeItem:tbViewData){
+					 if (storeItem.getQty()>0.0){
+						 qty=qty+storeItem.getQty();
+						 avgCost=avgCost+storeItem.getItem().getAvgCost();
+						totalStoreHasQty=totalStoreHasQty+1; 
+						flagHasQtys=true;		 
+					 }
+			
+				}
+				
+				System.out.println("tbViewData.size=:"+tbViewData.size());
+				
+				
+				if(totalStoreHasQty>0)
+				item.setAvgCost(avgCost/totalStoreHasQty);
+				else
+				item.setAvgCost(avgCost);
+				
+				item.setQty(qty);
+				
 				itemService.save(item);
+				
+				if(flagHasQtys==true){
+				for(StoreItem storeItem:tbViewData){
+					 if (storeItem.getQty()>0.0){
+						storeItemService.save(storeItem);
+						 }
+				}
+				}//end if(flagHasQtys==true)
+			
+				
+				for(ItemUnit itemUnit :itemUnitData) {
+					itemUnit.setItem(item);
+					itemUnitService.save(itemUnit);
+				}
 				AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
 				cancle(event);
 				flagSaveSuccess=false;
@@ -481,7 +607,8 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 		ce=(CellEditEvent<StoreItem,Double>) e;
 		Double avgCost=ce.getNewValue().doubleValue();
 		StoreItem storeItem=ce.getRowValue();
-		storeItem.getItem().setAvgCost(Double.parseDouble(ce.getNewValue().toString()));
+		storeItem.setAvgCost(Double.parseDouble(ce.getNewValue().toString()));
+		System.out.println("Edit().getAvgCost="+tbStoreItem.getSelectionModel().getSelectedItem().getItem().getAvgCost());
 		 }
 	public void loadItemTableViews() {
 		colItemQty.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
@@ -530,14 +657,7 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
     	});
     	colItemQty.setCellFactory(new TextFieldTableCell().forTableColumn(new DoubleStringConverter()));
 		colItemQty.setOnEditCommit(e -> colQtyOnEdit(e));
-			
-    	
-    	
-    	
-    	
-  
-
-
+		
     	colStoreId.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Long>, ObservableValue<Long>>() {
     	
 			
@@ -659,7 +779,7 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
 					@Override
 					public Double getValue() {
 	
-						return param.getValue().getItem().getAvgCost();
+						return param.getValue().getAvgCost();
 					}
 					
 				};
@@ -672,5 +792,69 @@ private  ObservableList<StoreItem> getStoreNameObserverableList() {
     	colUnitQty.setCellValueFactory(new PropertyValueFactory<>("pieces"));
     	colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
 	}
+	//this instance will contain Scound stage that will be return from <== stageManager.switchScene2(..)
+		Stage stage2=null;
+		
+		@FXML
+		public void showNewWindow(ActionEvent event) throws ExceptionUtil
+		{
+			if(event.getSource()==btnItemAddUnit){
+			
+				try{
+					if(cmbItemUnit.getValue()==null) 
+						throw new ExceptionUtil("ادخل اسم الوحدة الرئيسية اولا");
+					else if (cmbItemUnit.getValue().trim().length()<=0)
+						throw new ExceptionUtil("ادخل اسم الوحدة الرئيسية اولا");
+			
+					 stage2=stageManager.switchScene2(applicationContext, FxmlView.ADDNEWUNIT);
+					 lblItemUnitName.setText(cmbItemUnit.getValue().trim());
+					}catch(ExceptionUtil eu){
+						AlertUtil.showAlert(AlertType.ERROR,"رسالة خطأ",eu.getMessage(),"");
+					}
+			}
+		
+		}
+		
+		
+		@FXML 
+		public void handleAddUnitActions(ActionEvent event) throws IOException,ExceptionUtil
+		{
+			try {
+				ItemUnit itemUnit1=new ItemUnit();
+			if(event.getSource()==btnAddNewUnit){
+			//fetch data from AddNewUnit form to tableView of units
+						itemUnit1.setUnit(cmbUnitName2.getValue().toString());
+						double pieces=0;
+							if(rdUnitBigger.isSelected()) {
+								
+								if((txtItemQty2.getText().isEmpty()==false) && ((Double.parseDouble(txtItemQty2.getText().toString()))>0)){  //(txtItemPrice1.getText()!=null)
+									pieces=Double.parseDouble(txtItemQty2.getText().trim());
+									}else
+										throw new ExceptionUtil("ادخل كمية الوحدة الجديدة بشكل مناسب");
+							
+							}
+						
+							else if(rdUnitSmaller.isSelected()) {
+							pieces=Double.parseDouble(txtUnitPices.getText().trim())/Double.parseDouble(txtItemQty2.getText().trim());
+							}else
+								{
+								throw new ExceptionUtil("حدد اذا ما كانت الوحدة الجديدة اكبر ام اصغر من الوحدة الرئيسية !");
+								}
+						itemUnit1.setPieces(pieces);
+						itemUnit1.setPrice(Double.parseDouble(txtUnitPrice.getText()));
+				
+						itemUnitData.add(itemUnit1);
+						tbItemUnit.setItems(itemUnitData);
+						//tbItemUnit.getItems().add(itemUnit1);
+						for(ItemUnit iu:itemUnitData) {
+							System.out.println("UnitName="+iu.getUnit()+"-----UnitPieces="+ iu.getPieces()  + "-----UnitPrice="+ iu.getPrice()+"----itemUnitData="+itemUnitData.size())  ;
+						}
+						
+						stage2.close();
+			}
+			}catch(ExceptionUtil eu) {
+				AlertUtil.showAlert(AlertType.ERROR,eu.getMessage(),eu.getMessage());
+			}
+		}
 
-}
+		}

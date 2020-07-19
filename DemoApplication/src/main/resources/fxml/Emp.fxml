@@ -12,9 +12,9 @@
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <TextField fx:id="txtItemId" alignment="CENTER" layoutX="172.0" layoutY="36.0" prefHeight="37.0" prefWidth="276.0" promptText="Item Id" />
-            <Button fx:id="btnAddNewUnit" onAction="#returnAddNewItemForm" alignment="CENTER" layoutX="170.0" layoutY="134.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="276.0" text="Add New Item" />
-            <TextField fx:id="txtItemName" alignment="CENTER" layoutX="172.0" layoutY="83.0" prefHeight="37.0" prefWidth="276.0" promptText="Item Name" />
+            <TextField fx:id="txtFirst" alignment="CENTER" layoutX="172.0" layoutY="36.0" prefHeight="37.0" prefWidth="276.0" promptText="Item Id" />
+            <Button fx:id="btnAddNewUnit" onAction="#callWindow"  alignment="CENTER" layoutX="170.0" layoutY="134.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="276.0" text="Add New Item" />
+            <TextField fx:id="txtScound" alignment="CENTER" layoutX="172.0" layoutY="83.0" prefHeight="37.0" prefWidth="276.0" promptText="Item Name" />
          </children>
       </AnchorPane>
    </children>

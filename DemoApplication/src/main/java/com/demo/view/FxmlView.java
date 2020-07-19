@@ -6,27 +6,17 @@ public enum FxmlView {
 
 	ADDNEWITEM {
         @Override
-		public String getTitle() {
-            return getStringFromResourceBundle("AddNewItem.title");
-        }
-
+		public String getTitle() {return getStringFromResourceBundle("AddNewItem.title");}
         @Override
-		public String getFxmlFile() {
-            return "/fxml/AddNewItem.fxml";
-        }
-    }, 
+		public String getFxmlFile() {return "/fxml/AddNewItem.fxml";}
+    			}, 
     ITEMS{
         @Override
-		public String getTitle() {
-            return getStringFromResourceBundle("items.title");
-        }
-
+		public String getTitle() {return getStringFromResourceBundle("items.title");}
         @Override
-		public String getFxmlFile() {
-            return "/fxml/items.fxml";
-        }
+		public String getFxmlFile() {return "/fxml/items.fxml";}
 
-    },
+    	 },
 		ADDITEM{
         @Override
 		public String getTitle() {
@@ -51,8 +41,19 @@ public enum FxmlView {
             
         }
 	
+        },
+		ADDNEWUNIT{
+            @Override
+    		public String getTitle() {
+                return getStringFromResourceBundle("AddNewUnit.title");
+            }
+
+            @Override
+    		public String getFxmlFile() {
+                return "/fxml/AddNewUnit.fxml";
+                
+            }
         };
-    
     public abstract String getTitle();
     public abstract String getFxmlFile();
     

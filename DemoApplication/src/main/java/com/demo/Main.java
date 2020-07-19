@@ -39,6 +39,7 @@ import javafx.stage.Stage;
 		@Override
 		public void stop() throws Exception {
 			springContext.close();
+			System.out.println("Bye");
 		}
 	
 		/**
@@ -48,6 +49,7 @@ import javafx.stage.Stage;
 		 */
 		protected void displayInitialScene() {
 			stageManager.switchScene(FxmlView.ADDNEWITEM);
+			
 		}
 	
 		private ConfigurableApplicationContext springBootApplicationContext() {

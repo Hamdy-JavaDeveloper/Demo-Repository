@@ -48,7 +48,7 @@ private String categroy3;
 private String categroy4;
 private String categroy5;
 private String categroy6;
-private String Unit;
+private String unit;
 @Column(columnDefinition="Decimal(16,6) default '0.000000' ")
 private double qty;
 @Column(columnDefinition="Decimal(16,6) default '0.000000' ")

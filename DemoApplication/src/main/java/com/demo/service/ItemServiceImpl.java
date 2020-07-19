@@ -71,6 +71,11 @@ import com.demo.repository.ItemRepository;
 		
 		return itemRepo.findItemByItemName(itemName);
 	}
+
+	@Override
+	public List<String> findDistinctByUnit() {
+		return itemRepo.findDistinctByUnit();
+	}
 	
 
 
