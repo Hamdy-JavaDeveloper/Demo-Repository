@@ -9,6 +9,7 @@ import com.demo.view.FxmlView;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import com.demo.controller.AddNewItemController;
 	
 	@SpringBootApplication
 	public class Main extends Application {
@@ -38,8 +39,9 @@ import javafx.stage.Stage;
 	
 		@Override
 		public void stop() throws Exception {
-			springContext.close();
+			
 			System.out.println("Bye");
+			springContext.close();
 		}
 	
 		/**

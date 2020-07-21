@@ -2,6 +2,7 @@ package com.demo.cfg;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.awt.Dialog.ModalityType;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import com.demo.view.FxmlView;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 
@@ -99,9 +101,12 @@ public class StageManager {
 
 		}
 		Stage stage = new Stage();
+		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(view.getTitle());
 		stage.setScene(new Scene(root1));
+		
 		stage.show();
+		
 		return stage;
 	}
 

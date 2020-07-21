@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="712.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.controller.AddNewItemController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="712.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.controller.AddNewItemController">
    <children>
       <HBox alignment="CENTER_RIGHT" prefHeight="78.0" prefWidth="651.0">
          <children>
@@ -73,7 +73,7 @@
                   <Insets />
                </opaqueInsets>
                <font>
-                  <Font size="15.0" />
+                  <Font name="Times New Roman" size="15.0" />
                </font>
                <HBox.margin>
                   <Insets right="20.0" />
@@ -95,7 +95,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <RadioButton fx:id="rdUnitBigger" alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" prefWidth="184.0" text="اكبر من الوحدة الرئيسية">
+            <RadioButton fx:id="rdUnitBigger" alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#handleAddUnitActions" prefHeight="20.0" prefWidth="184.0" text="اكبر من الوحدة الرئيسية">
                <GridPane.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
@@ -103,7 +103,7 @@
                   <ToggleGroup fx:id="toggle1" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="rdUnitSmaller" alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" prefWidth="184.0" text="اصغر من الوحدة الرئيسية" toggleGroup="$toggle1" GridPane.columnIndex="1">
+            <RadioButton fx:id="rdUnitSmaller" alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#handleAddUnitActions" prefHeight="20.0" prefWidth="184.0" text="اصغر من الوحدة الرئيسية" toggleGroup="$toggle1" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
@@ -118,7 +118,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
             </TextField>
-            <Label alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="24.0" prefWidth="217.0" text="كم كمية هذه الوحدة؟" GridPane.rowIndex="1">
+            <Label fx:id="lblItemQty2" alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="24.0" prefWidth="217.0" text="كم كمية هذه الوحدة؟" GridPane.rowIndex="1">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -126,7 +126,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
             </Label>
-            <Label alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="24.0" prefWidth="190.0" text="من اصل كم في الوحدة الرئيسية؟" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="lblUnitPices" alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="24.0" prefWidth="190.0" text="من اصل كم في الوحدة الرئيسية؟" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -136,22 +136,26 @@
             </Label>
          </children>
       </GridPane>
-      <HBox alignment="CENTER_RIGHT" prefHeight="94.0" prefWidth="712.0">
+      <VBox>
          <children>
-            <TextField fx:id="txtUnitPrice" alignment="CENTER" prefHeight="26.0" prefWidth="239.0" promptText="txtUnitPrice" />
-            <Label alignment="CENTER" graphicTextGap="10.0" prefHeight="40.0" prefWidth="159.0" text="سعر بيع الوحدة">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-               <HBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </HBox.margin>
-            </Label>
+            <HBox alignment="CENTER_RIGHT" prefHeight="94.0" prefWidth="712.0">
+               <children>
+                  <TextField fx:id="txtUnitPrice" alignment="CENTER" prefHeight="26.0" prefWidth="239.0" promptText="txtUnitPrice" />
+                  <Label alignment="CENTER" graphicTextGap="10.0" prefHeight="40.0" prefWidth="159.0" text="سعر بيع الوحدة">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
       <GridPane alignment="TOP_RIGHT" prefHeight="72.0" prefWidth="712.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="198.0" minWidth="10.0" prefWidth="198.0" />
@@ -162,12 +166,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btnAddNewUnit" mnemonicParsing="false" onAction="#handleAddUnitActions" prefHeight="51.0" prefWidth="309.0" text="btnAddNewUnit" GridPane.columnIndex="2">
+            <Button fx:id="btnAddNewUnit" mnemonicParsing="false" onAction="#handleAddUnitActions" prefHeight="51.0" prefWidth="309.0" text="اضافة الوحدة للصنف" textFill="WHITE" GridPane.columnIndex="2" styleClass="btnFont" stylesheets="@style.css">
                <GridPane.margin>
                   <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="bitUnitCancel" mnemonicParsing="false" prefHeight="43.0" prefWidth="218.0" text="bitUnitCancel">
+            <Button fx:id="btnUnitCancel" mnemonicParsing="false" onAction="#handleAddUnitActions" prefHeight="43.0" prefWidth="218.0" text="تراجع" textFill="WHITE" styleClass="btnFont" stylesheets="@style.css">
                <GridPane.margin>
                   <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
                </GridPane.margin>

@@ -316,11 +316,11 @@
                                         <RowConstraints maxHeight="298.0" minHeight="10.0" prefHeight="287.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <TableView fx:id="tbItemUnit" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                          <TableView fx:id="tbItemUnit" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                                             <columns>
-                                              <TableColumn fx:id="colUnitName" prefWidth="169.0" text="unit name" />
-                                              <TableColumn fx:id="colUnitQty" prefWidth="106.0" text="unit qty" />
-											  <TableColumn fx:id="colUnitPrice" prefWidth="106.0" text="unit price" />
+                                              <TableColumn fx:id="colUnitName" prefWidth="169.0" text="اسم الوحدة" />
+                                              <TableColumn fx:id="colUnitQty" prefWidth="106.0" text="الكمية" />
+											  <TableColumn fx:id="colUnitPrice" prefWidth="106.0" text="سعر الوحدة" />
                                             </columns>
                                           </TableView>
                                           <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -333,7 +333,7 @@
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Button>
-                                                <Button fx:id="btnItemDeleteUnit"  graphicTextGap="10.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="حذف وحدة" textFill="#fffdfd">
+                                                <Button fx:id="btnItemDeleteUnit" onAction="#handleAddNewItemActions"  graphicTextGap="10.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="حذف وحدة" textFill="#fffdfd">
                                                    <VBox.margin>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </VBox.margin>
@@ -341,7 +341,7 @@
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Button>
-                                                <Button fx:id="btnItemUpdateUnitPrice" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="تعديل سعر وحدة" textFill="#fffdfd">
+                                                <Button fx:id="btnItemUpdateUnitPrice" onAction="#handleAddNewItemActions" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="تعديل سعر وحدة" textFill="#fffdfd">
                                                    <VBox.margin>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </VBox.margin>
@@ -400,7 +400,7 @@
                               <Font size="16.0" />
                            </font>
                            <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="PLUS" size="20" />
+                              <FontAwesomeIconView fill="WHITE" glyphName="PLUS" size="18" />
                            </graphic>
                         </Button>
                         <Button fx:id="btnItemSave" graphicTextGap="20.0" mnemonicParsing="false" onAction="#addItem" prefHeight="101.0" prefWidth="300.0" styleClass="btnFont" stylesheets="@style.css" text="حفظ" textFill="WHITE" GridPane.columnIndex="3">
@@ -408,7 +408,7 @@
                               <Font name="Nada" size="25.0" />
                            </font>
                            <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="SAVE" size="20" />
+                              <FontAwesomeIconView fill="WHITE" glyphName="SAVE" size="18" />
                            </graphic>
                         </Button>
                         <Button fx:id="btnItemCancel" mnemonicParsing="false" onAction="#cancle" prefHeight="101.0" prefWidth="289.0" styleClass="btnFont" stylesheets="@style.css" text="تراجع" textFill="WHITE">
@@ -416,7 +416,7 @@
                               <Font size="16.0" />
                            </font>
                            <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="CLOSE" size="20" />
+                              <FontAwesomeIconView fill="WHITE" glyphName="CLOSE" size="18"  />
                            </graphic>
                         </Button>
                      </children>
