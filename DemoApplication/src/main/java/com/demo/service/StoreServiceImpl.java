@@ -22,10 +22,10 @@ public class StoreServiceImpl implements StoreService {
 	@PostConstruct
 	public void initDB()
 	{
-	//List<Store> stores=new ArrayList<>();
-	//stores.add(new Store(1L,1L,true,"General Store"));
-	
-	storeRepository.save(new Store(1L,1L,true,"General Store"));
+	List<Store> stores=new ArrayList<>();
+	stores.add(new Store(1L,1L,true,"General Store"));
+	stores.add(new Store(2L,1L,true,"Scound Store"));
+	storeRepository.save(stores);
 	}
 	
 	@Override

@@ -12,20 +12,24 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
+import com.demo.bean.Invoice;
+import com.demo.bean.InvoiceItem;
 import com.demo.bean.Item;
 import com.demo.bean.ItemUnit;
 import com.demo.bean.Store;
 import com.demo.bean.StoreItem;
 import com.demo.cfg.StageManager;
+import com.demo.service.InvoiceItemService;
+import com.demo.service.InvoiceService;
 import com.demo.service.ItemService;
 import com.demo.service.ItemUnitService;
 import com.demo.service.StoreItemService;
 import com.demo.service.StoreService;
 import com.demo.util.AlertUtil;
 import com.demo.util.ExceptionUtil;
+import com.demo.util.InvoiceKind;
 import com.demo.view.FxmlView;
-import javafx.stage.Modality;
-import javafx.stage.StageStyle;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -54,7 +58,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
 
@@ -150,15 +156,19 @@ public class AddNewItemController  implements Initializable {
 		@Autowired	  private Item item;
 	    @Autowired    private StoreItem storeItem;
 	    @Autowired    private Store store;
+	    @Autowired    private Invoice invoice;
+	    @Autowired    private ItemUnit itemUnit;
 	    @Autowired    private StoreService storeService;
 	    @Autowired    private ItemService itemService;
 	    @Autowired    private StoreItemService	storeItemService;
-	    @Autowired    private ItemUnit itemUnit;
 	    @Autowired    private ItemUnitService itemUnitService;
+	    @Autowired    private InvoiceItemService invoiceItemService;
+	    @Autowired    private InvoiceService invoiceService;
+	    
 		//this instance will contain Scound stage that will be return from <== stageManager.switchScene2(..)
 	   private Stage stage2;
 	 
-	    private  ObservableList<StoreItem> getStoreNameObserverableList() {
+	    private  ObservableList<StoreItem> getStoreNamesList() {
 	    	List<Store> stores=storeService.findAllByActiveIs(true);
 		
 			Iterator<Store> iterator=stores.iterator();
@@ -204,7 +214,7 @@ public class AddNewItemController  implements Initializable {
 	    		ObservableList<String> unitNames=FXCollections.observableArrayList(itemService.findDistinctByUnit());
 	    		cmbItemUnit.setItems(unitNames);	
 	    	
-	    		tbViewData=getStoreNameObserverableList();
+	    		tbViewData=getStoreNamesList();
 	    		tbStoreItem.getItems().clear();
 	    		tbStoreItem.setItems(tbViewData);
 	    		Long maxId=itemService.findMaxId()+1L;
@@ -326,108 +336,27 @@ public class AddNewItemController  implements Initializable {
 	@FXML
 	private void addItemAndNew(ActionEvent event) throws IOException{
 		
-		try{
-			 item=getItemFromView();
-			
-			if (isItemExist(txtItemName.getText().toString())==true){ 
-				Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
-				result.ifPresent(response ->{
-				if (response==ButtonType.OK){
-					flagSave=true;
-				}else if (response==ButtonType.CANCEL){
-						
-					txtItemName.clear();
-						
-						//txtItemName.requestFocus();
-					}
-						});
-			
-			
-			
-			} else	{
-			
-				flagSave=true;
-						
-			}
-			
-			if(flagSave==true)
-			{
-				
-				//txtItemId.setDisable(true);
-				Long maxId=itemService.findMaxId()+1;
-				txtItemId.setText(maxId.toString());
-				maxId=maxId+1;
-				//initialize itemId for secound Item
-				txtItemId.setText(maxId.toString());
-				double qty=0.0;
-				double avgCost=0.0;
-			
-				boolean flagHasQtys=false;
-				
-				
-				
-				long totalStoreHasQty=0;
-				for(StoreItem storeItem:tbViewData){
-					 if (storeItem.getQty()>0.0){
-						 qty=qty+storeItem.getQty();
-						 avgCost=avgCost+(storeItem.getAvgCost()*storeItem.getQty());
-						 totalStoreHasQty=totalStoreHasQty+1; 
-						flagHasQtys=true;		 
-					 }
-					 
-				}
-				
-						
-				if(totalStoreHasQty>0) {
-				item.setAvgCost(avgCost/qty);
-				}
-				else
-				item.setAvgCost(avgCost);
-				
-				item.setQty(qty);
-				
-				itemService.save(item);
-				
-				if(flagHasQtys==true){
-				for(StoreItem storeItem:tbViewData){
-					 if (storeItem.getQty()>0.0){
-						storeItemService.save(storeItem);
-						 }
-				}
-				
-				
-				
-				}//end if(flagHasQtys==true)
-				
-				for(ItemUnit itemUnit :itemUnitData) {
-					itemUnit.setItem(item);
-					itemUnitService.save(itemUnit);
-				}
-				AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
-				itemUnitData.clear();
-				tbItemUnit.setItems(itemUnitData);
-				tbViewData.clear();
-				tbViewData=getStoreNameObserverableList();
-				tbStoreItem.setItems(tbViewData);
-				
-				clearUI();
-				cmbItemUnit.setValue(cmbItemUnit.getPromptText());
-				ObservableList<String> unitNames=FXCollections.observableArrayList(itemService.findDistinctByUnit());
-	    		cmbItemUnit.setItems(unitNames);	
-				flagSave=false;
-				txtItemName.requestFocus();
-			}//end if(flagSave==true)
-		}
-		
-		catch(ExceptionUtil eu){
-			AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", eu.getMessage() );
-		}
-			catch(Exception e){
-			AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", e.getMessage());
-			e.printStackTrace();
-		}
+			saveAll();
+			Long maxId=itemService.findMaxId(); 
+			maxId=maxId+1;
+			txtItemId.setText(maxId.toString()); 			//initialize itemId for secound Item
 
-	
+			txtItemName.requestFocus();
+			
+			itemUnitData.clear();     										//clear itemUnitData list
+			tbItemUnit.setItems(itemUnitData);  							//clear tableView
+			tbViewData.clear();												//clear tbViewData list
+			tbViewData=getStoreNamesList();									//load store name from stores table to tbViewData list 
+			tbStoreItem.setItems(tbViewData);								//load tbViewData list to tableView
+			
+			clearUI();
+			
+			//load units name from items table to combo
+			cmbItemUnit.setValue(cmbItemUnit.getPromptText());            
+			ObservableList<String> unitNames=FXCollections.observableArrayList(itemService.findDistinctByUnit());
+			cmbItemUnit.setItems(unitNames);
+			flagSave=false;
+		
 }
 	
 	private void clearUI(){
@@ -448,6 +377,13 @@ public class AddNewItemController  implements Initializable {
 		chkItemPriceIncludeTax.setSelected(false);
 		
 	}
+	
+	/**
+	 * This method checks if item name is already exist in item table 
+	 * @param itemName
+	 * @return
+	 */
+	
 	private Boolean isItemExist(String itemName){
 		boolean isExits=false;
 		if (itemService.findItemByItemName(itemName)==true){
@@ -457,9 +393,7 @@ public class AddNewItemController  implements Initializable {
 	}
 	@FXML
 	private void cancle(ActionEvent e) throws IOException{
-
-		    
-		    Stage stage = (Stage) btnItemCancel.getScene().getWindow();
+		Stage stage = (Stage) btnItemCancel.getScene().getWindow();
 		  //  stage.close();
 		    stage.hide();
 		    
@@ -470,86 +404,13 @@ public class AddNewItemController  implements Initializable {
 
 
 	
-	boolean flagSaveSuccess=false;
+	
 	@FXML
     private void addItem(ActionEvent event) throws IOException{
-		
-		try{
-				
-			 item=getItemFromView();
-					
-			if (isItemExist(txtItemName.getText().toString())==true){ 
-				Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
-				result.ifPresent(response ->{
-				if (response==ButtonType.OK){
-					flagSaveSuccess=true;
-					
-						
-				}else if (response==ButtonType.CANCEL){
-						txtItemName.clear();
-						txtItemName.requestFocus();
-					}
-						});
-			
-			}else{
-				flagSaveSuccess=true;
-			}
-			if (flagSaveSuccess)
-			{
-				
-				double qty=0;
-				double avgCost=0;
-				boolean flagHasQtys=false;
-				long totalStoreHasQty=0;
-				
-				for(StoreItem storeItem:tbViewData){
-					 if (storeItem.getQty()>0.0){
-						 qty=qty+storeItem.getQty();
-						 avgCost=avgCost+(storeItem.getAvgCost()*storeItem.getQty());
-						 
-						totalStoreHasQty=totalStoreHasQty+1; 
-						flagHasQtys=true;		 
-					 }
-			
-				}
-				
-				if(totalStoreHasQty>0)
-				item.setAvgCost(avgCost/qty);
-				else
-				item.setAvgCost(avgCost);
-				
-				item.setQty(qty);
-				
-				itemService.save(item);
-				
-				if(flagHasQtys==true){
-				for(StoreItem storeItem:tbViewData){
-					 if (storeItem.getQty()>0.0){
-						storeItemService.save(storeItem);
-						 }
-				}
-				}//end if(flagHasQtys==true)
-			
-				
-				for(ItemUnit itemUnit :itemUnitData) {
-					itemUnit.setItem(item);
-					itemUnitService.save(itemUnit);
-				}
-				AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
-				cancle(event);
-				flagSaveSuccess=false;
-			}
-
-		}
-		catch(ExceptionUtil eu){
-			AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", eu.getMessage() );
-		}
-			catch(Exception e){
-			AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", e.getMessage());
-			e.printStackTrace();
-		}
-		
-				
+	
+		saveAll();
+		cancle(event);
+		flagSave=false;
 	}
 
 
@@ -581,8 +442,6 @@ public class AddNewItemController  implements Initializable {
 	
 	public void loadItemTableViews() {
 		colItemQty.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
-
-
 			@Override
 			public ObservableValue<Double> call(CellDataFeatures<StoreItem, Double> param) {
 				// TODO Auto-generated method stub
@@ -707,15 +566,11 @@ public class AddNewItemController  implements Initializable {
 					}
 				};
 			}
-		
-    	
-    	
+		    	
     	});
     	
     	
 		colItemAvgCost.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StoreItem,Double>, ObservableValue<Double>>() {
-			
-
 			@Override
 			public ObservableValue<Double> call(CellDataFeatures<StoreItem, Double> param) {
 				
@@ -765,10 +620,9 @@ public class AddNewItemController  implements Initializable {
     	colUnitPrice.setOnEditCommit(e -> colUnitPriceOnEdit(e));
 	}
 
-		
+	
 		@FXML
-		public void showNewWindow(ActionEvent event) throws ExceptionUtil
-		{
+		public void showNewWindow(ActionEvent event) throws ExceptionUtil{
 			if(event.getSource()==btnItemAddUnit){
 			
 				try{
@@ -793,28 +647,25 @@ public class AddNewItemController  implements Initializable {
 			if(event.getSource()==btnAddNewUnit) {
 			try {
 				ItemUnit itemUnit1=new ItemUnit();
-			//fetch data from AddNewUnit form to tableView of units
-				if((cmbUnitName2.getSelectionModel().getSelectedItem()!=null)&&(cmbUnitName2.getSelectionModel().getSelectedItem().trim().length()>0)) {
-					System.out.println(cmbUnitName2.getSelectionModel().getSelectedItem().trim()+"<<<<<<<<<<<<<<<<<<<<<");
+			//fetch data from AddNewUnit window to tableView of units
+				if((cmbUnitName2.getSelectionModel().getSelectedItem()!=null)&&(cmbUnitName2.getSelectionModel().getSelectedItem().trim().length()>0))
 					itemUnit1.setUnit(cmbUnitName2.getValue().toString());
-				}else {
+				else {
 					cmbUnitName2.requestFocus();
 					throw new ExceptionUtil("ادخل اسم الوحدة الجديدة");
 					
 				}
 				
-							double pieces=0;
-							if(rdUnitBigger.isSelected()) {
-								
-								if((txtItemQty2.getText().isEmpty()==false) && ((Double.parseDouble(txtItemQty2.getText().toString()))>0)){  //(txtItemPrice1.getText()!=null)
+				double pieces=0;
+				if(rdUnitBigger.isSelected()) {
+		
+						if((txtItemQty2.getText().isEmpty()==false) && ((Double.parseDouble(txtItemQty2.getText().toString()))>0)) 
 									pieces=Double.parseDouble(txtItemQty2.getText().trim());
-									}else {
-										txtItemQty2.requestFocus();
-										throw new ExceptionUtil("ادخل كمية الوحدة الجديدة بشكل مناسب");
-									}
-							}
-						
-							else if(rdUnitSmaller.isSelected()) {
+						else {
+							txtItemQty2.requestFocus();
+							throw new ExceptionUtil("ادخل كمية الوحدة الجديدة بشكل مناسب");
+							 }
+				}else if(rdUnitSmaller.isSelected()) {
 								if((txtUnitPices.getText().isEmpty()==false) && ((Double.parseDouble(txtUnitPices.getText().toString()))>0))
 									pieces=Double.parseDouble(txtItemQty2.getText().trim())/Double.parseDouble(txtUnitPices.getText().trim());
 								else {
@@ -822,22 +673,21 @@ public class AddNewItemController  implements Initializable {
 									throw new ExceptionUtil("ادخل كمية الوحدة الجديدة بشكل مناسب");
 								}
 							}
-							else
-								{
-								throw new ExceptionUtil("حدد اذا ما كانت الوحدة الجديدة اكبر ام اصغر من الوحدة الرئيسية !");
-								}
+				 else
+					{
+					throw new ExceptionUtil("حدد اذا ما كانت الوحدة الجديدة اكبر ام اصغر من الوحدة الرئيسية !");
+					}
 						
-							if((txtUnitPrice.getText().isEmpty()==false) && ((Double.parseDouble(txtUnitPrice.getText().toString()))>0)) 
+					if((txtUnitPrice.getText().isEmpty()==false) && ((Double.parseDouble(txtUnitPrice.getText().toString()))>0)) 
 								itemUnit1.setPrice(Double.parseDouble(txtUnitPrice.getText()));
 								
-							else {
-								txtUnitPrice.requestFocus();
-								throw new ExceptionUtil("ادخل سعر الوحدة الجديدة بشكل مناسب");	
-							}
+					else {
+						txtUnitPrice.requestFocus();
+						throw new ExceptionUtil("ادخل سعر الوحدة الجديدة بشكل مناسب");	
+					     }
 						itemUnit1.setPieces(pieces);
 						itemUnitData.add(itemUnit1);
 						tbItemUnit.setItems(itemUnitData);
-																
 						stage2.close();
 			
 			}catch(ExceptionUtil eu) {
@@ -880,20 +730,116 @@ public class AddNewItemController  implements Initializable {
 		
 
 		private void editUnitPrice() {
+			
 			TextInputDialog inputDialog=new TextInputDialog();
 			inputDialog.setContentText("ادخل سعر الوحدة");
 			inputDialog.initModality(Modality.APPLICATION_MODAL);
 			inputDialog.initOwner(tbItemUnit.getScene().getWindow());
 			inputDialog.initStyle(StageStyle.UTILITY);
-			
+			//inputDialog.setContentText(String.valueOf(tbItemUnit.getSelectionModel().getSelectedItem().getPrice()));
+			inputDialog.setResult(String.valueOf(tbItemUnit.getSelectionModel().getSelectedItem().getPrice()));
 			Optional<String> result=inputDialog.showAndWait();
 			result.ifPresent(response ->{
 				if(!response.isEmpty()) {
 				double unitPrice=Double.parseDouble(response.trim());
 				
 				tbItemUnit.getSelectionModel().getSelectedItem().setPrice(unitPrice);
+				tbItemUnit.refresh();
+				
 				}
 					
 		});
 }
+		
+		
+//==========================================
+		private void saveAll(){
+
+			try{
+				 item=getItemFromView();
+				
+				if (isItemExist(txtItemName.getText().toString())==true){ 
+					Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
+					result.ifPresent(response ->{
+					if (response==ButtonType.OK){
+						flagSave=true;
+					}else if (response==ButtonType.CANCEL){
+						txtItemName.clear();
+						txtItemName.requestFocus();
+						}});
+				
+				} 
+				else{
+					flagSave=true;
+				}
+				
+				if(flagSave==true)
+				{
+					//txtItemId.setDisable(true);
+					double qty=0.0;
+					double avgCost=0.0;
+					boolean flagHasQtys=false;
+					long totalStoreHasQty=0;
+					for(StoreItem storeItem:tbViewData){
+						 if (storeItem.getQty()>0.0){
+							 qty=qty+storeItem.getQty();
+							 avgCost=avgCost+(storeItem.getAvgCost()*storeItem.getQty());
+							 totalStoreHasQty=totalStoreHasQty+1; 
+					   		flagHasQtys=true;		 
+						 }
+				
+					}
+					
+							
+				if(totalStoreHasQty>0){
+					item.setAvgCost(avgCost/qty);
+					}
+					else
+					item.setAvgCost(avgCost);
+					item.setQty(qty);
+					itemService.save(item);
+					if(flagHasQtys==true){
+					for(StoreItem storeItem:tbViewData){
+						 if (storeItem.getQty()>0.0){
+							storeItemService.save(storeItem);
+							 }
+					}
+					
+					}//end if(flagHasQtys==true)
+					
+					for(ItemUnit itemUnit :itemUnitData) {
+						itemUnit.setItem(item);
+						itemUnitService.save(itemUnit);
+					}
+					//List<InvoiceItem> invoiceItemList =new ArrayList<>();
+					 invoice= invoiceService.findByInvoiceId(1);
+					for(StoreItem si:tbViewData){
+						if (si.getQty()>0.0){
+						InvoiceItem invoiceItem=new InvoiceItem();
+						invoiceItem.setInvoice(invoice);
+						invoiceItem.setKind(InvoiceKind.OPEN);
+						invoiceItem.setItem(item);
+						invoiceItem.setStore(si.getStore());
+						invoiceItem.setQty(si.getQty());
+						invoiceItem.setAmount(si.getAvgCost());
+						invoiceItem.setTotal(si.getQty()*si.getAvgCost());
+						invoiceItem.setQtyIn(si.getQty());
+						//invoiceItemList.add(invoiceItem);
+						invoiceItemService.save(invoiceItem);
+						}
+						}
+					
+					AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
+					
+				}//end if(flagSave==true)
+		
+		}catch(ExceptionUtil eu){
+			AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", eu.getMessage() );
+		}
+			catch(Exception e){
+			AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", e.getMessage());
+			e.printStackTrace();
+		}
+		}//end saveAll()
+		
 }

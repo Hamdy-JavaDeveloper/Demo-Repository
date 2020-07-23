@@ -21,7 +21,7 @@ public class Item {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	
-	private long itemId;
+private long itemId;
 private String itemName;
 @Column(columnDefinition="Decimal(13,3) default '0.000' ")
 private double price1;
@@ -67,14 +67,5 @@ private double lastCost=0;
 private Date lastPurchased;
 private String photo;
 private String more;
-
-
-
-
-
-
-
-
-
 
 }
