@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.demo.bean.Invoice;
 import com.demo.bean.InvoiceItem;
+import com.demo.bean.Item;
 import com.demo.repository.InvoiceItemRepository;
 @Service
+@Transactional
 public class InvoiceItemServiceImpl implements InvoiceItemService {
 
 	
@@ -60,5 +64,25 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<InvoiceItem> findByInvoiceAndItem(Invoice invoice, Item item) {
+		return invoiceItemRepo.findByInvoiceAndItem(invoice,item);
+	}
+
+	@Override
+	public List<InvoiceItem> findByInvoice(Invoice invoice){
+		
+		return invoiceItemRepo.findByInvoice(invoice);
+		
+	}
+
+	@Override
+	public List<InvoiceItem> findByItem(Item item) {
+		
+		return invoiceItemRepo.findByItem(item);
+	}
+
+	
 
 }

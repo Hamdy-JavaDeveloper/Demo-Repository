@@ -1,5 +1,7 @@
 package com.demo.bean;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,32 +19,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
-
 @Component
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "invoices_items")
 public class InvoiceItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long pk;
-	@Column(columnDefinition = "Varchar(10) ", nullable = true)
-	private String kind;
-	private long sn;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="invoice_id_FK",referencedColumnName ="invoiceId",nullable=false)
 	private Invoice invoice;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@Column(columnDefinition = "Varchar(10) ", nullable = true)
+	private String kind;
+	private long sn;
+	
+	
+	
+	@ManyToOne  //(fetch = FetchType.LAZY)
 	@JoinColumn(name="store_id_FK",nullable=false)
 	private Store store;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="item_id_FK")
 	private Item item;
 	

@@ -10,14 +10,18 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.bean.Invoice;
+import com.demo.bean.InvoiceItem;
 import com.demo.bean.Store;
+import com.demo.repository.InvoiceItemRepository;
 import com.demo.repository.InvoiceRepository;
 import com.demo.util.InvoiceKind;
 
 
 @Service
+@Transactional
 public class InvoiceServiceImpl implements InvoiceService {
 	
 	@Autowired InvoiceRepository invoiceRepo ;
@@ -25,9 +29,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 	@PostConstruct
 	public void initDB()
 	{
-		Invoice invoice=invoiceRepo.findById(1);
+		Invoice invoice=invoiceRepo.findById(0);
 		  if(invoice==null) {
-				invoice=new Invoice(); invoice.setInvoiceId(1);
+				invoice=new Invoice(); invoice.setInvoiceId(0);
 				invoice.setKind(InvoiceKind.OPEN);
 		  
 		  invoiceRepo.save(invoice);
@@ -84,5 +88,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 	public Invoice findByInvoiceId(long id) {
 		return invoiceRepo.findById(id) ;
 	}
+	
 
 }

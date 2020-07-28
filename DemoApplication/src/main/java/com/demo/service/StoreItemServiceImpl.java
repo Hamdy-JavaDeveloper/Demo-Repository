@@ -4,14 +4,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.demo.bean.Item;
 import com.demo.bean.StoreItem;
 import com.demo.repository.StoreItemRepository;
 
 @Service
+@Transactional
 public class StoreItemServiceImpl implements StoreItemService {
 	@Autowired
-	StoreItemRepository StoreItemRepository;
+	StoreItemRepository storeItemRepository;
 	
 	
 	@Override
@@ -20,10 +23,11 @@ public class StoreItemServiceImpl implements StoreItemService {
 		return null;
 	}
 
+	
 	@Override
 	public StoreItem save(StoreItem entity) {
 		
-		return StoreItemRepository.save(entity);
+		return storeItemRepository.save(entity);
 	}
 
 	@Override
@@ -60,6 +64,12 @@ public class StoreItemServiceImpl implements StoreItemService {
 	public List<StoreItem> findAll() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<StoreItem> findByItem(Item item) {
+		
+		return storeItemRepository.findByItem(item);
 	}
 
 }

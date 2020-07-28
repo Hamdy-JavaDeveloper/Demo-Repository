@@ -9,7 +9,9 @@ import java.lang.Boolean;
 
 public interface ItemService extends GenericService<Item> {
 	Boolean findItemByItemName(String itemName);
-	public List<String>findDistinctByUnit();
+	public List<String> findDistinctByUnit();
+	public List<String> findDistinctByCategroy1();
+	
 	
 
 }

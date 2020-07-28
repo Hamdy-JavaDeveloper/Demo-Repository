@@ -1,5 +1,6 @@
 package com.demo.bean;
 
+import java.io.Serializable;
 import java.security.Timestamp;
 import java.util.Date;
 
@@ -10,30 +11,33 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.NaturalIdCache;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-enum Kind{
-	OPEN,SALE,RETURNSALE,SQLEQUOTE,PURCHASE,RETURNPURCHASE,INVENT,TRANSFER,ADJUST
-}
+
 
 @Component
 @Data
 @Entity
 @Table(name="invoices")
-public class Invoice {
+
+public class Invoice implements Serializable  {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long pk;
 	
-	@Column(columnDefinition="Varchar(10) COMMENT 'OPEN, SALE, RETURNSALE, SALEQUOTE, PURCHASE, RETURNPUR, INVENT, TRANSFER, ADJUST'" ,nullable = true)
-	private String kind;
-
 	@Column(columnDefinition=" int(11) DEFAULT '0'")
 	@NaturalId
 	private long invoiceId;
+	
+	@Column(columnDefinition="Varchar(10) COMMENT 'OPEN, SALE, RETURNSALE, SALEQUOTE, PURCHASE, RETURNPUR, INVENT, TRANSFER, ADJUST'" ,nullable = true)
+	private String kind;
+
+	
 	private long storeId;
 	@Column(nullable = true)
 	private Date date1;

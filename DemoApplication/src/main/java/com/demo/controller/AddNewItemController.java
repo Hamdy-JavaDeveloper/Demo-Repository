@@ -1,11 +1,16 @@
 package com.demo.controller;
 
+
+import java.awt.dnd.MouseDragGestureRecognizer;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import javax.swing.plaf.ToolTipUI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -132,7 +137,7 @@ public class AddNewItemController  implements Initializable {
 	    @FXML   private TableColumn<StoreItem, String> colStoreName;
 	    @FXML   private TableColumn<StoreItem, Double> colItemQty;
 	    @FXML   private TableColumn<StoreItem, Double> colItemAvgCost;
-	    ObservableList<StoreItem> tbViewData=FXCollections.observableArrayList();
+	    ObservableList<StoreItem> storeItemData=FXCollections.observableArrayList();
 		//AddNewUnit window ===========================================
 
 	    @FXML   private Label lblItemUnitName;
@@ -155,8 +160,10 @@ public class AddNewItemController  implements Initializable {
 		 
 		@Autowired	  private Item item;
 	    @Autowired    private StoreItem storeItem;
+	   
 	    @Autowired    private Store store;
 	    @Autowired    private Invoice invoice;
+	    @Autowired    private InvoiceItem invoiceItem;
 	    @Autowired    private ItemUnit itemUnit;
 	    @Autowired    private StoreService storeService;
 	    @Autowired    private ItemService itemService;
@@ -181,10 +188,10 @@ public class AddNewItemController  implements Initializable {
 				si.setItem(item);
 				si.getItem().setAvgCost(0.0);
 				
-				tbViewData.add(si);
+				storeItemData.add(si);
 				
 			}
-			return tbViewData;
+			return storeItemData;
 	    }
 	  
 	  
@@ -192,8 +199,9 @@ public class AddNewItemController  implements Initializable {
 	    public void initialize(URL location, ResourceBundle resources) {
 	    	
 	    	
+//============================================================================
+//Delete UnitRow 	    	
 	    	tbItemUnit.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
 				@Override
 				public void handle(KeyEvent keyEvent) {
 					if (keyEvent.getCode()==KeyCode.DELETE) {
@@ -201,22 +209,31 @@ public class AddNewItemController  implements Initializable {
 					tbItemUnit.setItems(itemUnitData);
 					}
 				}
-	    	  	});	
+	    	  	});
 	    	
-	    	
-	    	if(location.getPath().contains("AddNewItem.fxml") ==true) {
+	   			
+				  txtItemId.setOnAction(new EventHandler<ActionEvent>() {
+				  
+				  @Override 
+				  public void handle(ActionEvent event) {
+				  showItemDetials(txtItemId.getText().trim());
+				  }
+				   });
+				   
+				 	    	if(location.getPath().contains("AddNewItem.fxml") ==true) {
 	    		
 		    		
 	    		loadItemTableViews();
 	    		
 	    		//cmbItemUnit.setValue(cmbItemUnit.getPromptText());
 	    		cmbItemUnit.setValue(null);
-	    		ObservableList<String> unitNames=FXCollections.observableArrayList(itemService.findDistinctByUnit());
-	    		cmbItemUnit.setItems(unitNames);	
-	    	
-	    		tbViewData=getStoreNamesList();
+	    		ObservableList<String> unitList=FXCollections.observableArrayList(itemService.findDistinctByUnit());
+	    		cmbItemUnit.setItems(unitList);	
+	    		ObservableList<String> categroyList1=FXCollections.observableArrayList(itemService.findDistinctByCategroy1());
+	    		cmbItemCategroy1.setItems(categroyList1);	
+	    		storeItemData=getStoreNamesList();
 	    		tbStoreItem.getItems().clear();
-	    		tbStoreItem.setItems(tbViewData);
+	    		tbStoreItem.setItems(storeItemData);
 	    		Long maxId=itemService.findMaxId()+1L;
 	    		txtItemId.setText(maxId.toString());
 	    	
@@ -237,11 +254,88 @@ public class AddNewItemController  implements Initializable {
 	    	}
 	}//end initilize method 
 	
-	
+	/**
+	 * This method called from txtItemId TextField
+	 * @param itemId
+	 */
+	protected void showItemDetials(String itemId) {
+		
+		  if(itemId.isEmpty()==false && Long.parseLong(itemId)>0) { //item Item
+			  	clearUI();
+				//first we check if Item if exist in database or not
+			  	item=itemService.find(Long.parseLong(itemId));
+				if (item!=null) {
+				txtItemName.setText(String.valueOf(item.getItemName()));
+				txtItemPrice1.setText(String.valueOf(item.getPrice1()));
+				txtItemPriceMin.setText(String.valueOf(item.getPriceMin()));
+				txtItemDiscountPer1.setText(String.valueOf(item.getDiscountPer()));
+				txtItemBarcode.setText(item.getBarcode());
+				txtItemCode1.setText(item.getCode1());
+				txtItemCode2.setText(item.getCode2());
+				txtItemMore.setText(item.getMore());
+				
+				txtItemReorderQty.setText(String.valueOf(item.getReorderQty()));
+				
+				
+				cmbItemCategroy1.setValue(item.getCategroy1());
+				cmbItemCategroy2.setValue(item.getCategroy2());
+				
+				cmbItemUnit.setValue(item.getUnit());
+			//	cmbItemTaxType.setPromptText(item.getTaxType());
+				
+				
+				//get Units
+				List<ItemUnit> itemUnitList=itemUnitService.findByItem(item); 
+				System.out.println("itemUnitList.size="+itemUnitList.size());
+				//get StoreItem 
+				List<StoreItem> storeItemList =storeItemService.findByItem(item);
+				System.out.println("storeItemList.size="+storeItemList.size());
+				//get Invoice kind of OPEN
+				Invoice invoice=invoiceService.findByInvoiceId(0);					
+				List<InvoiceItem>  invoiceItemList=invoiceItemService.findByInvoiceAndItem(invoice, item);
+				System.out.println("invoiceItemList.size="+invoiceItemList.size());
+				  int i=0;
+				 	  for(InvoiceItem invoiceItem:invoiceItemList) {
+					  storeItemList.get(i).setAvgCost(invoiceItem.getCost());
+					  i++;
+				      }
+				 	  for(Store store:storeService.findAllByActiveIs(true))
+				 	  {
+				 		  StoreItem si=new StoreItem();
+				 		  if (!storeItemList.contains(store))
+				 		  si.setStore(store);
+				 		  si.setQty(0);
+				 		  si.setAvgCost(0.0);
+				 		  si.setItem(item);
+				 		  
+				 		  storeItemList.add(si);  
+				 	  }
+				 	 System.out.println("i="+i +"QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+				 	  i=0;
+				 	System.out.println("i="+i +"ZZzZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZzzzzzz");
+				 	  storeItemData.clear();
+				 	  storeItemData.setAll(storeItemList); 
+				      tbStoreItem.setItems(storeItemData);
+				
+				      itemUnitData.clear();
+				      itemUnitData.setAll(itemUnitList); 
+				      tbItemUnit.setItems(itemUnitData);
+			  }else
+				  AlertUtil.showAlert(AlertType.WARNING,"هذا الصنف غير موجود تاكد كم رقم الصنف الذي ادخلته", "هذا الصنف غير موجود تاكد كم رقم الصنف الذي ادخلته");
+				
+				//end if
+		  }
+	  }
+			
+		
+
+	  
 	private Item getItemFromView() throws ExceptionUtil
 	{
 		
+	
 		item.setItemId(Long.parseLong(txtItemId.getText().toString()));
+		
 		System.out.println(item.getItemId()+"ID>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		String itemName=txtItemName.getText().trim().toString();
 		if (itemName== null || itemName.trim().length() == 0) {
@@ -345,16 +439,19 @@ public class AddNewItemController  implements Initializable {
 			
 			itemUnitData.clear();     										//clear itemUnitData list
 			tbItemUnit.setItems(itemUnitData);  							//clear tableView
-			tbViewData.clear();												//clear tbViewData list
-			tbViewData=getStoreNamesList();									//load store name from stores table to tbViewData list 
-			tbStoreItem.setItems(tbViewData);								//load tbViewData list to tableView
+			storeItemData.clear();												//clear tbViewData list
+			storeItemData=getStoreNamesList();									//load store name from stores table to tbViewData list 
+			tbStoreItem.setItems(storeItemData);								//load tbViewData list to tableView
 			
 			clearUI();
 			
 			//load units name from items table to combo
 			cmbItemUnit.setValue(cmbItemUnit.getPromptText());            
-			ObservableList<String> unitNames=FXCollections.observableArrayList(itemService.findDistinctByUnit());
-			cmbItemUnit.setItems(unitNames);
+			cmbItemUnit.setItems(FXCollections.observableArrayList(itemService.findDistinctByUnit()));
+			//load categroy1 names from items table to combo
+			cmbItemCategroy1.setValue(cmbItemCategroy1.getPromptText());            
+			cmbItemCategroy1.setItems(FXCollections.observableArrayList(itemService.findDistinctByCategroy1()));
+	
 			flagSave=false;
 		
 }
@@ -755,9 +852,13 @@ public class AddNewItemController  implements Initializable {
 //==========================================
 		private void saveAll(){
 
+			
+			//save or update 
 			try{
-				 item=getItemFromView();
-				
+				item=getItemFromView();
+				//tester object 
+				Item item1=itemService.find(item.getItemId());
+				if(item1==null) {//if item is not exist
 				if (isItemExist(txtItemName.getText().toString())==true){ 
 					Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
 					result.ifPresent(response ->{
@@ -770,8 +871,16 @@ public class AddNewItemController  implements Initializable {
 				
 				} 
 				else{
+				
 					flagSave=true;
 				}
+				}else {
+					flagSave=true;
+				}
+			
+				
+				
+				
 				
 				if(flagSave==true)
 				{
@@ -780,7 +889,7 @@ public class AddNewItemController  implements Initializable {
 					double avgCost=0.0;
 					boolean flagHasQtys=false;
 					long totalStoreHasQty=0;
-					for(StoreItem storeItem:tbViewData){
+					for(StoreItem storeItem:storeItemData){
 						 if (storeItem.getQty()>0.0){
 							 qty=qty+storeItem.getQty();
 							 avgCost=avgCost+(storeItem.getAvgCost()*storeItem.getQty());
@@ -799,7 +908,7 @@ public class AddNewItemController  implements Initializable {
 					item.setQty(qty);
 					itemService.save(item);
 					if(flagHasQtys==true){
-					for(StoreItem storeItem:tbViewData){
+					for(StoreItem storeItem:storeItemData){
 						 if (storeItem.getQty()>0.0){
 							storeItemService.save(storeItem);
 							 }
@@ -811,26 +920,72 @@ public class AddNewItemController  implements Initializable {
 						itemUnit.setItem(item);
 						itemUnitService.save(itemUnit);
 					}
-					//List<InvoiceItem> invoiceItemList =new ArrayList<>();
-					 invoice= invoiceService.findByInvoiceId(1);
-					for(StoreItem si:tbViewData){
+					invoice= invoiceService.findByInvoiceId(0);
+//    
+//					Iterator iterator=storeItemData.iterator();
+//					while(iterator.hasNext()) {
+//						
+//					}
+//					
+					List<InvoiceItem>  invoiceItemList=invoiceItemService.findByInvoiceAndItem(invoice, item);
+					if(invoiceItemList.size()<=0) {
+					for(StoreItem si:storeItemData){
 						if (si.getQty()>0.0){
 						InvoiceItem invoiceItem=new InvoiceItem();
 						invoiceItem.setInvoice(invoice);
 						invoiceItem.setKind(InvoiceKind.OPEN);
+						invoiceItem.setSn(0);
 						invoiceItem.setItem(item);
 						invoiceItem.setStore(si.getStore());
 						invoiceItem.setQty(si.getQty());
 						invoiceItem.setAmount(si.getAvgCost());
 						invoiceItem.setTotal(si.getQty()*si.getAvgCost());
 						invoiceItem.setQtyIn(si.getQty());
-						//invoiceItemList.add(invoiceItem);
+						invoiceItem.setUnit(item.getUnit());
+						invoiceItem.setUnitPieces(1);				//
+						invoiceItem.setUnitQtyIn(si.getQty());
+						invoiceItem.setUnitCost(si.getAvgCost());
+						invoiceItem.setTotalCost(si.getQty()*si.getAvgCost());
+						invoiceItem.setNetCost(si.getQty()*si.getAvgCost());	//
+						invoiceItem.setNetTotal(si.getQty()*si.getAvgCost());
+						invoiceItem.setCost(si.getAvgCost());
+						invoiceItem.setGrandTotal(si.getQty()*si.getAvgCost());
+						invoiceItem.setRealNetCost(si.getQty()*si.getAvgCost());
+						invoiceItem.setRealCost(si.getAvgCost());
 						invoiceItemService.save(invoiceItem);
 						}
+						
+					else {
+						for(InvoiceItem invoiceItem:invoiceItemList) {
+							invoiceItem.setInvoice(invoice);
+							invoiceItem.setKind(InvoiceKind.OPEN);
+							invoiceItem.setSn(0);
+							invoiceItem.setItem(item);
+							invoiceItem.setStore(si.getStore());
+							invoiceItem.setQty(si.getQty());
+							invoiceItem.setAmount(si.getAvgCost());
+							invoiceItem.setTotal(si.getQty()*si.getAvgCost());
+							invoiceItem.setQtyIn(si.getQty());
+							invoiceItem.setUnit(item.getUnit());
+							invoiceItem.setUnitPieces(1);				//
+							invoiceItem.setUnitQtyIn(si.getQty());
+							invoiceItem.setUnitCost(si.getAvgCost());
+							invoiceItem.setTotalCost(si.getQty()*si.getAvgCost());
+							invoiceItem.setNetCost(si.getQty()*si.getAvgCost());	//
+							invoiceItem.setNetTotal(si.getQty()*si.getAvgCost());
+							invoiceItem.setCost(si.getAvgCost());
+							invoiceItem.setGrandTotal(si.getQty()*si.getAvgCost());
+							invoiceItem.setRealNetCost(si.getQty()*si.getAvgCost());
+							invoiceItem.setRealCost(si.getAvgCost());
+							invoiceItemService.save(invoiceItem);
+						
 						}
+					}
+						
+					}
 					
+					}
 					AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
-					
 				}//end if(flagSave==true)
 		
 		}catch(ExceptionUtil eu){
@@ -840,6 +995,9 @@ public class AddNewItemController  implements Initializable {
 			AlertUtil.showAlert(AlertType.INFORMATION, "فشل في عملية الادخال", e.getMessage());
 			e.printStackTrace();
 		}
+			
+			
 		}//end saveAll()
+
 		
 }

@@ -1,15 +1,16 @@
 package com.demo.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.bean.Item;
 import com.demo.repository.ItemRepository;
 
 @Service
+@Transactional
  class ItemServiceImpl implements ItemService {
 
 	@Autowired
@@ -50,7 +51,6 @@ import com.demo.repository.ItemRepository;
 
 	@Override
 	public Item find(Long id) {
-
 		return itemRepo.findOne(id);
 	}
 
@@ -75,6 +75,12 @@ import com.demo.repository.ItemRepository;
 	@Override
 	public List<String> findDistinctByUnit() {
 		return itemRepo.findDistinctByUnit();
+	}
+
+	@Override
+	public List<String> findDistinctByCategroy1() {
+		return itemRepo.findDistinctByCategroy1();
+
 	}
 	
 
