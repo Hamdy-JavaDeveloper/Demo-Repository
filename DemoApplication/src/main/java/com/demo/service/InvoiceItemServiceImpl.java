@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.demo.bean.Invoice;
 import com.demo.bean.InvoiceItem;
 import com.demo.bean.Item;
+import com.demo.bean.Store;
+import com.demo.bean.StoreItem;
 import com.demo.repository.InvoiceItemRepository;
 @Service
 @Transactional
@@ -36,8 +38,8 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
 	}
 
 	@Override
-	public void delete(InvoiceItem entity) {
-		// TODO Auto-generated method stub
+	public void delete(InvoiceItem invoiceItem) {
+		invoiceItemRepo.delete(invoiceItem);
 
 	}
 
@@ -82,6 +84,22 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
 		
 		return invoiceItemRepo.findByItem(item);
 	}
+
+	@Override
+	public InvoiceItem findByStoreItem(StoreItem storeItem) {
+		
+		return invoiceItemRepo.findByStoreAndItem(storeItem.getStore(), storeItem.getItem());
+	}
+
+	@Override
+	public void deleteByStoreItem(StoreItem storeItem) {
+		InvoiceItem ii=findByStoreItem(storeItem);
+		System.out.println(ii.getPk()+"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		System.out.println(ii);
+		invoiceItemRepo.delete(ii);
+		
+	}
+
 
 	
 

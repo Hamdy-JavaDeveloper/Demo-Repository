@@ -15,8 +15,10 @@ import javax.persistence.Transient;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 @Component
 @Data
+@EqualsAndHashCode
 @Entity
 @Table(name="stores_items")
 public class StoreItem {

@@ -82,6 +82,12 @@ import com.demo.repository.ItemRepository;
 		return itemRepo.findDistinctByCategroy1();
 
 	}
+
+	@Override
+	public Long findMinItemId() {
+		
+		return itemRepo.findMinItemId();
+	}
 	
 
 

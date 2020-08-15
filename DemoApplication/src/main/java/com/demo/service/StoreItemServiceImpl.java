@@ -37,8 +37,8 @@ public class StoreItemServiceImpl implements StoreItemService {
 	}
 
 	@Override
-	public void delete(StoreItem entity) {
-		// TODO Auto-generated method stub
+	public void delete(StoreItem storeItem) {
+		storeItemRepository.delete(storeItem);
 		
 	}
 
@@ -71,5 +71,8 @@ public class StoreItemServiceImpl implements StoreItemService {
 		
 		return storeItemRepository.findByItem(item);
 	}
+
+
+	
 
 }

@@ -25,6 +25,9 @@ public class StoreServiceImpl implements StoreService {
 	List<Store> stores=new ArrayList<>();
 	stores.add(new Store(1L,1L,true,"General Store"));
 	stores.add(new Store(2L,1L,true,"Scound Store"));
+	stores.add(new Store(3L,1L,true,"Third Store"));
+	stores.add(new Store(4L,1L,true,"Fourth Store"));
+	stores.add(new Store(5L,1L,true,"Fivth Store"));
 	storeRepository.save(stores);
 	}
 	

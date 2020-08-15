@@ -95,14 +95,6 @@
                         </Label>
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
-                     <children>
-                        <Button fx:id="btnLastItem" layoutX="512.0" layoutY="12.0" mnemonicParsing="false" onAction="#handleAddNewItemActions" prefHeight="38.0" prefWidth="90.0" text="&gt;&gt; Last" />
-                        <Button fx:id="btnNextItem" layoutX="415.0" layoutY="12.0" mnemonicParsing="false" onAction="#handleAddNewItemActions" prefHeight="38.0" prefWidth="90.0" text="&gt; Next" />
-                        <Button fx:id="btnPreviousItem" layoutX="315.0" layoutY="12.0" mnemonicParsing="false" onAction="#handleAddNewItemActions" prefHeight="38.0" prefWidth="90.0" text="&lt;Previos" />
-                        <Button fx:id="btnFirstItem" layoutX="214.0" layoutY="12.0" mnemonicParsing="false" onAction="#handleAddNewItemActions" prefHeight="38.0" prefWidth="90.0" text="&lt;&lt; First" />
-                     </children>
-                  </AnchorPane>
                </children>
             </GridPane>
             <AnchorPane layoutX="4.0" layoutY="31.0">
@@ -281,10 +273,10 @@
                                           <CheckBox fx:id="chkItemDead" alignment="BOTTOM_LEFT" mnemonicParsing="false" prefHeight="30.0" prefWidth="252.0" styleClass="generalFont" text="صنف غير مستخدم" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                           <AnchorPane prefHeight="100.0" prefWidth="349.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                              <children>
-                                                <GridPane prefHeight="140.0" prefWidth="336.0">
+                                                <GridPane prefHeight="140.0" prefWidth="349.0">
                                                    <columnConstraints>
                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.0" minWidth="10.0" prefWidth="126.0" />
-                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="255.0" minWidth="10.0" prefWidth="223.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="255.0" minWidth="10.0" prefWidth="217.0" />
                                                    </columnConstraints>
                                                    <rowConstraints>
                                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -295,7 +287,7 @@
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="txtItemReorderQty" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="208.0" GridPane.columnIndex="1">
+                                                      <TextField fx:id="txtItemReorderQty" alignment="CENTER" prefHeight="28.0" prefWidth="219.0" GridPane.columnIndex="1">
                                                          <font>
                                                             <Font size="14.0" />
                                                          </font>
@@ -333,7 +325,7 @@
                                           </TableView>
                                           <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <Button fx:id="btnItemAddUnit" graphicTextGap="10.0" mnemonicParsing="false" onAction="#showNewWindow" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="اضافة وحدة جديدة" textFill="#fffdfd">
+                                                <Button fx:id="btnItemAddUnit" onAction="#showNewWindow" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="اضافة وحدة جديدة" textFill="#fffdfd">
                                                    <VBox.margin>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </VBox.margin>
@@ -341,7 +333,7 @@
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Button>
-                                                <Button fx:id="btnItemDeleteUnit" graphicTextGap="10.0" mnemonicParsing="false" onAction="#handleAddNewItemActions" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="حذف وحدة" textFill="#fffdfd">
+                                                <Button fx:id="btnItemDeleteUnit" onAction="#handleAddNewItemActions"  graphicTextGap="10.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="حذف وحدة" textFill="#fffdfd">
                                                    <VBox.margin>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </VBox.margin>
@@ -349,7 +341,7 @@
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Button>
-                                                <Button fx:id="btnItemUpdateUnitPrice" graphicTextGap="10.0" mnemonicParsing="false" onAction="#handleAddNewItemActions" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="تعديل سعر وحدة" textFill="#fffdfd">
+                                                <Button fx:id="btnItemUpdateUnitPrice" onAction="#handleAddNewItemActions" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="264.0" styleClass="btnFont" text="تعديل سعر وحدة" textFill="#fffdfd">
                                                    <VBox.margin>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </VBox.margin>
@@ -392,7 +384,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
                <children>
-                  <GridPane alignment="TOP_CENTER" cacheShape="false" centerShape="false" prefHeight="103.0" prefWidth="1123.0">
+                  <GridPane prefHeight="103.0" prefWidth="1123.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="269.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="244.0" />
@@ -403,7 +395,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="btnItemSaveAndNew" graphicTextGap="10.0" mnemonicParsing="false" onAction="#addItemAndNew" prefHeight="59.0" prefWidth="288.0" styleClass="btnFont" stylesheets="@style.css" text="حفظ و جديد" textFill="WHITE" GridPane.columnIndex="2">
+                        <Button fx:id="btnItemSaveAndNew" mnemonicParsing="false" onAction="#addItemAndNew" prefHeight="101.0" prefWidth="289.0" styleClass="btnFont" stylesheets="@style.css" text="حفظ و جديد" textFill="WHITE" GridPane.columnIndex="2">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -411,7 +403,7 @@
                               <FontAwesomeIconView fill="WHITE" glyphName="PLUS" size="18" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnItemSave" graphicTextGap="10.0" mnemonicParsing="false" onAction="#addItem" prefHeight="59.0" prefWidth="294.0" styleClass="btnFont" stylesheets="@style.css" text="حفظ" textFill="WHITE" GridPane.columnIndex="3">
+                        <Button fx:id="btnItemSave" graphicTextGap="20.0" mnemonicParsing="false" onAction="#addItem" prefHeight="101.0" prefWidth="300.0" styleClass="btnFont" stylesheets="@style.css" text="حفظ" textFill="WHITE" GridPane.columnIndex="3">
                            <font>
                               <Font name="Nada" size="25.0" />
                            </font>
@@ -419,20 +411,12 @@
                               <FontAwesomeIconView fill="WHITE" glyphName="SAVE" size="18" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnItemCancel" mnemonicParsing="false" onAction="#cancle" prefHeight="59.0" prefWidth="263.0" styleClass="btnFont" stylesheets="@style.css" text="تراجع" textFill="WHITE">
+                        <Button fx:id="btnItemCancel" mnemonicParsing="false" onAction="#cancle" prefHeight="101.0" prefWidth="289.0" styleClass="btnFont" stylesheets="@style.css" text="تراجع" textFill="WHITE">
                            <font>
                               <Font size="16.0" />
                            </font>
                            <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="CLOSE" size="18" />
-                           </graphic>
-                        </Button>
-                        <Button fx:id="btnNewItem" onAction="#handleAddNewItemActions" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="238.0" styleClass="btnFont" stylesheets="@style.css" text="جديد" textFill="WHITE" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="FILE" size="18" />
+                              <FontAwesomeIconView fill="WHITE" glyphName="CLOSE" size="18"  />
                            </graphic>
                         </Button>
                      </children>
