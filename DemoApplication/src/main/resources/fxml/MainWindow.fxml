@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.controller.MainWindowController">
+   <children>
+      <MenuBar nodeOrientation="RIGHT_TO_LEFT" styleClass="generalFont">
+        <menus>
+          <Menu mnemonicParsing="false" text="ملف">
+            <items>
+              <MenuItem fx:id="menuItemGoods" mnemonicParsing="false" onAction="#handleMenuActions" text="البضاعة" />
+                  <MenuItem fx:id="menuItemAddItem" mnemonicParsing="false" onAction="#handleMenuActions" text="ادخال صنف" />
+                  <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" onAction="#handleMenuActions" text="ادخال صنف" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <AnchorPane fx:id="viewPane" blendMode="MULTIPLY" prefHeight="800.0" prefWidth="1600.0" style="-fx-background-color: #ffeecc;">
+         <VBox.margin>
+            <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+         </VBox.margin></AnchorPane>
+   </children>
+</VBox>

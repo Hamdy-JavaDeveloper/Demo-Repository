@@ -18,11 +18,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="712.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.controller.AddNewItemController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="712.0" styleClass="generalFont" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.controller.AddNewItemController">
    <children>
       <HBox alignment="CENTER_RIGHT" prefHeight="78.0" prefWidth="651.0">
          <children>
-            <Label fx:id="lblItemUnitName" alignment="CENTER" graphicTextGap="10.0" prefHeight="40.0" prefWidth="286.0">
+            <Label fx:id="lblItemUnitName" alignment="CENTER" graphicTextGap="10.0" prefHeight="40.0" prefWidth="286.0" styleClass="generalFont">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -33,7 +33,7 @@
                   <Font size="33.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" graphicTextGap="10.0" prefHeight="40.0" prefWidth="224.0" text="وحدة الصنف">
+            <Label alignment="CENTER" graphicTextGap="10.0" prefHeight="40.0" prefWidth="224.0" styleClass="generalFont" text="وحدة الصنف">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -48,7 +48,7 @@
       </HBox>
       <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="651.0">
          <children>
-            <Label alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="40.0" prefWidth="286.0" text="كرتونة قطعة  كيلو">
+            <Label alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="40.0" prefWidth="286.0" styleClass="generalFont" text="كرتونة قطعة  كيلو">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -68,7 +68,7 @@
       </HBox>
       <HBox alignment="CENTER_RIGHT" prefHeight="78.0" prefWidth="651.0">
          <children>
-            <Label alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="40.0" prefWidth="536.0" text="هل الوحدة الجديدة اكبر من الوحدة الرئيسية ؟">
+            <Label alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="40.0" prefWidth="536.0" styleClass="generalFont" text="هل الوحدة الجديدة اكبر من الوحدة الرئيسية ؟">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -103,7 +103,7 @@
                   <ToggleGroup fx:id="toggle1" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="rdUnitSmaller" alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#handleAddUnitActions" prefHeight="20.0" prefWidth="184.0" text="اصغر من الوحدة الرئيسية" toggleGroup="$toggle1" GridPane.columnIndex="1">
+            <RadioButton fx:id="rdUnitSmaller" alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#handleAddUnitActions" prefHeight="29.0" prefWidth="241.0" text="اصغر من الوحدة الرئيسية" toggleGroup="$toggle1" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
@@ -118,7 +118,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
             </TextField>
-            <Label fx:id="lblItemQty2" alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="24.0" prefWidth="217.0" text="كم كمية هذه الوحدة؟" GridPane.rowIndex="1">
+            <Label fx:id="lblItemQty2" alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="29.0" prefWidth="205.0" text="كم كمية هذه الوحدة؟" GridPane.rowIndex="1">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -126,7 +126,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="lblUnitPices" alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="24.0" prefWidth="190.0" text="من اصل كم في الوحدة الرئيسية؟" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="lblUnitPices" alignment="CENTER_RIGHT" graphicTextGap="10.0" prefHeight="29.0" prefWidth="265.0" text="من اصل كم في الوحدة الرئيسية؟" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -140,18 +140,26 @@
          <children>
             <HBox alignment="CENTER_RIGHT" prefHeight="94.0" prefWidth="712.0">
                <children>
-                  <TextField fx:id="txtUnitPrice" alignment="CENTER" prefHeight="26.0" prefWidth="239.0" promptText="txtUnitPrice" />
-                  <Label alignment="CENTER" graphicTextGap="10.0" prefHeight="40.0" prefWidth="159.0" text="سعر بيع الوحدة">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </HBox.margin>
-                  </Label>
+                  <VBox prefHeight="94.0" prefWidth="314.0">
+                     <children>
+                        <Label alignment="CENTER" graphicTextGap="10.0" prefHeight="40.0" prefWidth="306.0" text="سعر بيع الوحدة">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtUnitPrice" alignment="CENTER" prefHeight="26.0" prefWidth="239.0" promptText="txtUnitPrice">
+                           <VBox.margin>
+                              <Insets right="20.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
                </children>
             </HBox>
          </children>
@@ -166,12 +174,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btnAddNewUnit" mnemonicParsing="false" onAction="#handleAddUnitActions" prefHeight="51.0" prefWidth="309.0" text="اضافة الوحدة للصنف" textFill="WHITE" GridPane.columnIndex="2" styleClass="btnFont" stylesheets="@style.css">
+            <Button fx:id="btnAddNewUnit" mnemonicParsing="false" onAction="#handleAddUnitActions" prefHeight="51.0" prefWidth="309.0" styleClass="btnFont" stylesheets="@style.css" text="اضافة الوحدة للصنف" textFill="WHITE" GridPane.columnIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="btnUnitCancel" mnemonicParsing="false" onAction="#handleAddUnitActions" prefHeight="43.0" prefWidth="218.0" text="تراجع" textFill="WHITE" styleClass="btnFont" stylesheets="@style.css">
+            <Button fx:id="btnUnitCancel" mnemonicParsing="false" onAction="#handleAddUnitActions" prefHeight="43.0" prefWidth="218.0" styleClass="btnFont" stylesheets="@style.css" text="تراجع" textFill="WHITE">
                <GridPane.margin>
                   <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
                </GridPane.margin>

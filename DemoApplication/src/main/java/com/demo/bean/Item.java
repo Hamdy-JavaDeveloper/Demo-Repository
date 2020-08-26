@@ -19,7 +19,7 @@ import lombok.Data;
 @Table(name="items")
 public class Item {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
 	
 private long itemId;
 private String itemName;

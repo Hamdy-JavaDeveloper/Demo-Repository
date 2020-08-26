@@ -94,8 +94,6 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
 	@Override
 	public void deleteByStoreItem(StoreItem storeItem) {
 		InvoiceItem ii=findByStoreItem(storeItem);
-		System.out.println(ii.getPk()+"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-		System.out.println(ii);
 		invoiceItemRepo.delete(ii);
 		
 	}

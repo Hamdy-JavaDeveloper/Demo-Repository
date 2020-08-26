@@ -50,7 +50,7 @@ import com.demo.controller.AddNewItemController;
 		 * window.
 		 */
 		protected void displayInitialScene() {
-			stageManager.switchScene(FxmlView.ADDNEWITEM);
+			stageManager.switchScene(FxmlView.MAIN_WINDOW);
 			
 		}
 	

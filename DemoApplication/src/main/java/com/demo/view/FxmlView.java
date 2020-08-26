@@ -10,11 +10,11 @@ public enum FxmlView {
         @Override
 		public String getFxmlFile() {return "/fxml/AddNewItem.fxml";}
     			}, 
-    ITEMS{
+    GOODS{
         @Override
 		public String getTitle() {return getStringFromResourceBundle("items.title");}
         @Override
-		public String getFxmlFile() {return "/fxml/items.fxml";}
+		public String getFxmlFile() {return "/fxml/Goods.fxml";}
 
     	 },
 		ADDITEM{
@@ -29,7 +29,7 @@ public enum FxmlView {
             
 
     }
-    },	TEST{
+    },	MAIN_WINDOW{
         @Override
 		public String getTitle() {
             return getStringFromResourceBundle("testTb.title");
@@ -37,7 +37,7 @@ public enum FxmlView {
 
         @Override
 		public String getFxmlFile() {
-            return "/fxml/Emp.fxml";
+            return "/fxml/MainWindow.fxml";
             
         }
 	
@@ -53,7 +53,9 @@ public enum FxmlView {
                 return "/fxml/AddNewUnit.fxml";
                 
             }
-        };
+        }
+        
+        ;
     public abstract String getTitle();
     public abstract String getFxmlFile();
     

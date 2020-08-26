@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.cathive.fonts.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="goodsBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.controller.GoodsController">
+   <left>
+      <VBox prefHeight="475.0" prefWidth="259.0" styleClass="bgcolorDark" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="btnNewItem" mnemonicParsing="false" onAction="#handleGoodsAction" prefHeight="88.0" prefWidth="83.0" styleClass="btnFont" text="جديد">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnUpdateItem" mnemonicParsing="false" onAction="#handleGoodsAction" prefHeight="88.0" prefWidth="83.0" styleClass="btnFont" text="تعديل">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnDeleteItem" mnemonicParsing="false" onAction="#handleGoodsAction" prefHeight="88.0" prefWidth="83.0" styleClass="btnFont" text="حذف">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox prefHeight="51.0" prefWidth="259.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="259.0" styleClass="btnFont" text="عرض حركة صنف">
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                         
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children></VBox>
+   </left>
+   <center>
+      <TableView fx:id="tbItems" nodeOrientation="RIGHT_TO_LEFT" prefHeight="500.0" prefWidth="1175.0" styleClass="lighBlue" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="colItemId" prefWidth="75.0" text="رقم الصنف" />
+          <TableColumn fx:id="colItemName" minWidth="30.0" prefWidth="109.0" styleClass="lighBlue" text="اسم الصنف" />
+            <TableColumn fx:id="colItemTotalQty" prefWidth="78.0" text="اجمالي الكمية" />
+            <TableColumn fx:id="colItemUnit" minWidth="0.0" prefWidth="69.0" text="الوحدة" />
+            <TableColumn fx:id="colItemPrice" prefWidth="44.0" text="سعر البيع" />
+            <TableColumn fx:id="colItemDiscount" prefWidth="75.0" text="الخصم" />
+            <TableColumn fx:id="colItemPriceMin" prefWidth="75.0" text="اقل سعر" />
+            <TableColumn fx:id="colItemLastDatePurchese" prefWidth="75.0" text="تاريخ اخر شراء" />
+            <TableColumn fx:id="colItemBarcode" prefWidth="75.0" text="باركود" />
+            <TableColumn fx:id="colItemCode" prefWidth="136.0" text="كود الصنف" />
+            <TableColumn fx:id="colItemCategroy" prefWidth="38.0" text="التصنيف" />
+        </columns>
+      </TableView>
+   </center>
+   <top>
+      <AnchorPane prefHeight="115.0" prefWidth="1014.0" style="-fx-background-color: Lightgray;" styleClass="bgcolor" stylesheets="@style.css" BorderPane.alignment="CENTER">
+         <children>
+            <ComboBox fx:id="combSearchItem" editable="true" layoutX="1251.0" layoutY="44.0" prefHeight="31.0" prefWidth="326.0" AnchorPane.rightAnchor="23.0" />
+            <ComboBox fx:id="combCategroyItem" editable="true" layoutX="1000.0" layoutY="44.0" prefHeight="31.0" prefWidth="227.0" AnchorPane.rightAnchor="373.0" />
+            <CheckBox fx:id="chkShowItemsLessQty" contentDisplay="RIGHT" layoutX="1310.0" layoutY="84.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="21.0" prefWidth="267.0" styleClass="generalFont" text="عرض الاصناف التي تجاوزت اقل كمية" AnchorPane.rightAnchor="23.0" />
+            <CheckBox fx:id="chkShowItemsNotUsed" contentDisplay="RIGHT" layoutX="960.0" layoutY="84.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="21.0" prefWidth="267.0" styleClass="generalFont" text="عرض الاصناف الغير مستخدمة فقط" AnchorPane.rightAnchor="373.0" />
+            <Label layoutX="1472.0" layoutY="11.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="21.0" prefWidth="109.0" styleClass="generalFont" stylesheets="@DemoApplication/src/main/resources/fxml/style.css" text="بحث عن" AnchorPane.rightAnchor="19.0" />
+            <Label layoutX="1122.0" layoutY="11.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="21.0" prefWidth="109.0" styleClass="generalFont" stylesheets="@DemoApplication/src/main/resources/fxml/style.css" text="التصنيف" AnchorPane.rightAnchor="369.0" />
+         </children>
+      </AnchorPane>
+   </top>
+   <bottom>
+      <AnchorPane prefHeight="70.0" prefWidth="1434.0" style="-fx-background-color: ;" styleClass="bgcolor" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>

@@ -35,9 +35,9 @@ public class ItemUnitServiceImpl implements ItemUnitService {
 	}
 
 	@Override
-	public void delete(ItemUnit entity) {
-		// TODO Auto-generated method stub
+	public void delete(ItemUnit itemUnit) {
 		
+		itemUnitRepository.delete(itemUnit);
 	}
 
 	@Override

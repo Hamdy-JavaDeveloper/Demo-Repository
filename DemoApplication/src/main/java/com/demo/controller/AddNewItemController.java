@@ -2,76 +2,78 @@
 	
 	
 	import java.io.IOException;
-	import java.net.URL;
-	import java.util.ArrayList;
-	import java.util.Comparator;
-	import java.util.Iterator;
-	import java.util.List;
-	import java.util.Optional;
-	import java.util.ResourceBundle;
-	import java.util.stream.Collectors;
-	
-	import org.omg.CORBA.portable.ValueOutputStream;
-	import org.springframework.beans.factory.annotation.Autowired;
-	import org.springframework.context.ApplicationContext;
-	import org.springframework.context.annotation.Lazy;
-	import org.springframework.stereotype.Controller;
-	
-	import com.demo.bean.Invoice;
-	import com.demo.bean.InvoiceItem;
-	import com.demo.bean.Item;
-	import com.demo.bean.ItemUnit;
-	import com.demo.bean.Store;
-	import com.demo.bean.StoreItem;
-	import com.demo.cfg.StageManager;
-	import com.demo.service.InvoiceItemService;
-	import com.demo.service.InvoiceService;
-	import com.demo.service.ItemService;
-	import com.demo.service.ItemUnitService;
-	import com.demo.service.StoreItemService;
-	import com.demo.service.StoreService;
-	import com.demo.util.AlertUtil;
-	import com.demo.util.ExceptionUtil;
-	import com.demo.util.InvoiceKind;
-	import com.demo.view.FxmlView;
-	
-	import javafx.beans.InvalidationListener;
-	import javafx.beans.value.ChangeListener;
-	import javafx.beans.value.ObservableValue;
-	import javafx.collections.FXCollections;
-	import javafx.collections.ObservableList;
-	import javafx.event.ActionEvent;
-	import javafx.event.Event;
-	import javafx.event.EventHandler;
-	import javafx.fxml.FXML;
-	import javafx.fxml.Initializable;
-	import javafx.scene.control.Alert.AlertType;
-	import javafx.scene.control.Button;
-	import javafx.scene.control.ButtonType;
-	import javafx.scene.control.CheckBox;
-	import javafx.scene.control.ComboBox;
-	import javafx.scene.control.Label;
-	import javafx.scene.control.RadioButton;
-	import javafx.scene.control.TableColumn;
-	import javafx.scene.control.TableColumn.CellDataFeatures;
-	import javafx.scene.control.TableColumn.CellEditEvent;
-	import javafx.scene.control.TableView;
-	import javafx.scene.control.TextArea;
-	import javafx.scene.control.TextField;
-	import javafx.scene.control.TextInputDialog;
-	import javafx.scene.control.cell.PropertyValueFactory;
-	import javafx.scene.control.cell.TextFieldTableCell;
-	import javafx.scene.input.KeyCode;
-	import javafx.scene.input.KeyEvent;
-	import javafx.stage.Modality;
-	import javafx.stage.Stage;
-	import javafx.stage.StageStyle;
-	import javafx.util.Callback;
-	import javafx.util.converter.DoubleStringConverter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+
+import com.demo.bean.Invoice;
+import com.demo.bean.InvoiceItem;
+import com.demo.bean.Item;
+import com.demo.bean.ItemUnit;
+import com.demo.bean.Store;
+import com.demo.bean.StoreItem;
+import com.demo.cfg.StageManager;
+import com.demo.service.InvoiceItemService;
+import com.demo.service.InvoiceService;
+import com.demo.service.ItemService;
+import com.demo.service.ItemUnitService;
+import com.demo.service.StoreItemService;
+import com.demo.service.StoreService;
+import com.demo.util.AlertUtil;
+import com.demo.util.ExceptionUtil;
+import com.demo.util.InvoiceKind;
+import com.demo.view.FxmlView;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Callback;
+import javafx.util.converter.DoubleStringConverter;
 	
 	@Controller
 	public class AddNewItemController  implements Initializable {
 		
+		@FXML  private VBox AddNewItemVBoxPane;
 			@FXML
 		    private TextField txtItemId; 
 		 	@FXML
@@ -183,6 +185,9 @@
 		    @Autowired    private InvoiceItemService invoiceItemService;
 		    @Autowired    private InvoiceService invoiceService;
 		    
+		    public void setTxtItemId(String itemId) {
+		    	txtItemId.setText(itemId);
+		    }
 			//this instance will contain Scound stage that will be return from <== stageManager.switchScene2(..)
 		   private Stage stage2;
 		 
@@ -205,11 +210,34 @@
 				item=myItem;
 				return storeItemData;
 		    }
-		  
-		  
+		    
+		  //  public static final KeyCodeCombination saveShortcut=new 
 		    @Override
 		    public void initialize(URL location, ResourceBundle resources) {
 		    	
+		    	//====================================================
+		    	//Shortcut Key
+		    	AddNewItemVBoxPane.setOnKeyPressed(key ->{
+		    		if(key.getCode()==KeyCode.ESCAPE) {
+		    			try {
+		    			cancle(null);
+		    			}catch(IOException ioe) {
+		    				
+		    			}
+		    		}
+		    			
+		    	});
+		    	AddNewItemVBoxPane.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+					@Override
+					public void handle(KeyEvent key) {
+						//Ctrl+S
+						if(key.getCode()==KeyCode.S && key.isShortcutDown()) {
+							System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+						}
+					}
+		    		
+		    	});
 		    	
 	//============================================================================
 	//Delete UnitRow 	    	
@@ -217,8 +245,13 @@
 					@Override
 					public void handle(KeyEvent keyEvent) {
 						if (keyEvent.getCode()==KeyCode.DELETE) {
-						itemUnitData.remove(tbItemUnit.getSelectionModel().getSelectedItem());
+						ItemUnit itemUnitDeleted=tbItemUnit.getSelectionModel().getSelectedItem();
+							itemUnitData.remove(itemUnitDeleted);
+						itemUnitListDeleted.add(itemUnitDeleted);
+						System.out.println(itemUnitDeleted);
+						
 						tbItemUnit.setItems(itemUnitData);
+						
 						}
 					}
 		    	  	});
@@ -232,7 +265,7 @@
 					  }
 					   });
 					   
-					 	    	if(location.getPath().contains("AddNewItem.fxml") ==true) {
+					if(location.getPath().contains("AddNewItem.fxml") ==true) {
 		    		
 			    		
 		    		loadItemTableViews();
@@ -242,7 +275,8 @@
 		    		ObservableList<String> unitList=FXCollections.observableArrayList(itemService.findDistinctByUnit());
 		    		cmbItemUnit.setItems(unitList);	
 		    		ObservableList<String> categroyList1=FXCollections.observableArrayList(itemService.findDistinctByCategroy1());
-		    		cmbItemCategroy1.setItems(categroyList1);	
+		    		cmbItemCategroy1.setItems(categroyList1);
+		    		storeItemData.clear();
 		    		storeItemData=getStoreNamesList();
 		    		tbStoreItem.getItems().clear();
 		    		tbStoreItem.setItems(storeItemData);
@@ -311,11 +345,13 @@
 					List<InvoiceItem>  invoiceItemList=invoiceItemService.findByInvoiceAndItem(invoice, item);
 					System.out.println("**************invoiceItemList.size>="+invoiceItemList.size());
 					  int i=0;
-						
+					  List<StoreItem> tempStoreItemList=new ArrayList();
+					
 						  for(InvoiceItem invoiceItem:invoiceItemList) {
 						  storeItemList.get(i).setAvgCost(invoiceItem.getCost());
 						  i++; 
 						  }
+					
 						  //System.out.println(storeItemList);
 						 
 					 	/*
@@ -347,7 +383,7 @@
 					 		   
 					 	  }
 					 	*/
-						  List<StoreItem> tempStoreItemList=new ArrayList();
+						 
 						  for(Store store:storeService.findAllByActiveIs(true))
 					 	  {
 					 		 
@@ -357,14 +393,14 @@
 					 		  
 					 		  tempStoreItemList.add(si);
 					 	  }
-						 //Long ii=storeItemList.stream().min(Comparator.comparing(StoreItem::getId)).get().getStore().getId()-1;
+
 						  
 						 
 						  int ii=0;
 						
 						  System.out.println("storeItemList.size()="+storeItemList.size());
 						  System.out.println("tempStoreItemList.size()="+tempStoreItemList.size());
-						 
+						  if(storeItemList.size()>0) {	//This condition is important in case item does not have qty in storeItem and InvoiceItem th	 
 						 // for(StoreItem storeItem:tempStoreItemList){
 						  for(int j=0;j<tempStoreItemList.size();j++) {
 							  if(storeItemList.get(ii).getStore().getId()==tempStoreItemList.get(j).getStore().getId()){
@@ -382,6 +418,9 @@
 							  
 							
 						  }
+					}//end if
+						  
+					
 						  System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 						  System.out.println("tempStoreItemList="+tempStoreItemList);
 						  System.out.println("tempStoreItemList.size()="+tempStoreItemList.size());
@@ -400,8 +439,10 @@
 					      itemUnitData.setAll(itemUnitList); 
 					      tbItemUnit.setItems(null);
 					      tbItemUnit.setItems(itemUnitData);
+					      //index=Integer.parseInt(itemId);
+					
 				  }else {
-					  AlertUtil.showAlert(AlertType.WARNING,"هذا الصنف غير موجود تاكد من رقم الصنف الذي ادخلته", "هذا الصنف غير موجود تاكد كم رقم الصنف الذي ادخلته");
+					  AlertUtil.showAlert(AlertType.WARNING,"هذا الصنف غير موجود تاكد من رقم الصنف الذي ادخلته", "هذا الصنف غير موجود تاكد من رقم الصنف الذي ادخلته");
 					  Long maxId=itemService.findMaxId(); 
 						maxId=maxId+1;
 						txtItemId.setText(maxId.toString()); 			//initialize itemId for secound Item
@@ -600,6 +641,15 @@
 			Stage stage = (Stage) btnItemCancel.getScene().getWindow();
 			  //  stage.close();
 			    stage.hide();
+			    txtItemName.requestFocus();
+				
+				itemUnitData.clear();     										//clear itemUnitData list
+				tbItemUnit.setItems(itemUnitData);  							//clear tableView
+				storeItemData.clear();												//clear tbViewData list
+				storeItemData=getStoreNamesList();									//load store name from stores table to tbViewData list 
+				tbStoreItem.setItems(storeItemData);								//load tbViewData list to tableView
+				
+				clearUI();
 			    
 			   
 		
@@ -622,6 +672,7 @@
 		}
 	
 	public ObservableList<StoreItem> storeItemListModified=FXCollections.observableArrayList(); 
+	public ObservableList<ItemUnit> itemUnitListDeleted=FXCollections.observableArrayList();
 		
 	public void colQtyOnEdit(Event e) {
 			TableColumn.CellEditEvent<StoreItem,Double> ce;
@@ -634,6 +685,7 @@
 			if(storeItemListModified.contains(si)==false) {
 				
 			storeItemListModified.add(si);
+			System.out.println("FROM EDIT_____>storeItemListModified.size="+storeItemListModified.size());
 			}
 			 }
 		public void colCostAvgOnEdit(Event e) {
@@ -656,6 +708,7 @@
 			Double unitPrice=ce.getNewValue().doubleValue();
 			ItemUnit iu=ce.getRowValue();
 			iu.setPrice(Double.parseDouble(ce.getNewValue().toString()));
+			
 			
 					 }
 		
@@ -935,12 +988,26 @@
 				}
 			
 			}
+			int index;//=goodsController.getItemTableView().getSelectionModel().getSelectedIndex();
+			public void setIndex(int index) {
+			this.index=index;
+			}
+			
+			@Autowired
+			private GoodsController goodsController;
+			
+			
+			
 			@FXML
 			private void handleAddNewItemActions(ActionEvent event) throws IOException{
 				Long itemId=Long.parseLong(txtItemId.getText());
-			if(event.getSource()==btnItemDeleteUnit) {
 				
-				itemUnitData.remove(tbItemUnit.getSelectionModel().getSelectedItem());
+			if(event.getSource()==btnItemDeleteUnit) {
+				ItemUnit itemUnitDeleted=new ItemUnit();
+				itemUnitDeleted=tbItemUnit.getSelectionModel().getSelectedItem();
+				itemUnitData.remove(itemUnitDeleted);
+				itemUnitListDeleted.add(itemUnitDeleted);
+				System.out.println(itemUnitDeleted);
 				tbItemUnit.setItems(itemUnitData);
 			}
 			else if(event.getSource()==btnItemUpdateUnitPrice){
@@ -950,28 +1017,48 @@
 			//==================================================
 			else if(event.getSource()==btnFirstItem){
 				System.out.println("FisrtItem(Min)");
+				//itemId=itemService.findMinItemId();
+				index=0;
+				itemId=goodsController.getItemTableView().getItems().get(index).getItemId();
 				
-				 itemId=itemService.findMinItemId();
 				if(itemId!=0){
 				txtItemId.setText(itemId.toString());
 				showItemDetials(txtItemId.getText());
+				
 				btnFirstItem.setDisable(true);
 				btnPreviousItem.setDisable(true);
 				btnLastItem.setDisable(false);
 				btnNextItem.setDisable(false);
+				
 				}
 							
 			}
 			else if(event.getSource()==btnNextItem){
-				System.out.println("NextItem");
+			
+				
+				
+//				Item myItem=itemService.find(itemId);
+//				while(myItem==null) {
+//					itemId++;
+//					myItem=itemService.find(itemId);
+//					
+//				}
 				
 				
 				
+				if(itemId<itemService.findMaxId() && index<goodsController.getItemTableView().getItems().size()-1){
 				
-				//Item myItem=itemService.find(itemId);
-				if(itemId<itemService.findMaxId()){
+					//===============
+				
+					index=index+1;
+					System.out.println("index="+index);
+					itemId=goodsController.getItemTableView().getItems().get(index).getItemId();
+					//goodsController.getItemTableView().getSelectionModel().getSelectionM;
 					
-				itemId=itemId+1;	
+					
+					//===============
+				//itemId=itemId+1;
+				
 				txtItemId.setText(itemId.toString());
 				
 				showItemDetials(txtItemId.getText());
@@ -993,17 +1080,27 @@
 			}else if(event.getSource()==btnPreviousItem){
 				System.out.println("PreviousItem");
 				
-				 itemId=Long.parseLong(txtItemId.getText());
+				//itemId=Long.parseLong(txtItemId.getText());
 				
-				if(itemId>itemService.findMinItemId()){
-					itemId=itemId-1;
+				
+				
+				
+
+				if(itemId>itemService.findMinItemId() && index>=0){
+					
+ 					 if(index!=0)index=index-1;
+ 					 System.out.println("index="+index);
+ 					itemId=goodsController.getItemTableView().getItems().get(index).getItemId();
+					
+					//itemId=itemId-1;
+					
 				txtItemId.setText(itemId.toString());
 				showItemDetials(txtItemId.getText());
 				btnFirstItem.setDisable(false);
 				btnPreviousItem.setDisable(false);
 				btnLastItem.setDisable(false);
 				btnNextItem.setDisable(false);
-			}else{
+			}else {
 				btnFirstItem.setDisable(true);
 				btnPreviousItem.setDisable(true);
 				btnLastItem.setDisable(false);
@@ -1012,7 +1109,9 @@
 			}
 			else if(event.getSource()==btnLastItem){
 				System.out.println("LastItem(Max)");
-				 itemId=itemService.findMaxId();
+				 //itemId=itemService.findMaxId();
+				index=goodsController.getItemTableView().getItems().size()-1;
+				itemId=goodsController.getItemTableView().getItems().get(index).getItemId();
 				
 				if(itemId!=0){
 				txtItemId.setText(itemId.toString());
@@ -1262,7 +1361,7 @@
 			private void saveNewItem() {
 				try{
 					item=getItemFromView();
-					 
+					
 					
 						if (isItemExist(txtItemName.getText().toString())==true){ 
 						Optional<ButtonType> result=AlertUtil.getAlert(AlertType.CONFIRMATION, "تنبية", "اسم هذا الصنف موجود من قبل ,هل انت متاكد من اضافة هذا الصنف", "aaaaaaa").showAndWait();
@@ -1353,6 +1452,8 @@
 					
 					}
 					AlertUtil.showAlert(AlertType.INFORMATION, "تم اضافة الصنف بنجاح", "");
+					storeItemListModified.clear(); // it's necessary to Clear the List after each save operation
+					
 				}
 				
 				}//end if(flagSave==true)
@@ -1385,7 +1486,7 @@
 					 if (storeItem.getQty()>0.0){
 						 qty=qty+storeItem.getQty();
 						 avgCost=avgCost+(storeItem.getAvgCost()*storeItem.getQty());
-						 //avgCost=avgCost+(storeItem.getAvgCost());
+					
 						 totalStoreHasQty=totalStoreHasQty+1; 
 				   		flagHasQtys=true;		 
 					 }
@@ -1410,12 +1511,12 @@
 						
 						
 						 storeItemService.delete(storeItem);
-				 
+						 System.out.println("***********Delete *************************");
 											 
 						
 						 					
 						 }
-					 System.out.println("***********Delete *************************");
+					
 					 }
 						 
 						
@@ -1424,7 +1525,7 @@
 				}
 				
 				//end if(flagHasQtys==true)
-				
+				//save new units if user add new unit
 				for(ItemUnit itemUnit :itemUnitData) {
 					itemUnit.setItem(item);
 					itemUnitService.save(itemUnit);
@@ -1437,7 +1538,7 @@
 				
 				
 				
-				System.out.println("The storeItemListModified size ="+storeItemListModified.size());
+				System.out.println("~~~~~~~~~~~~~~~~~~The storeItemListModified size ="+storeItemListModified.size());
 				
 				Iterator iterator=storeItemListModified.iterator();
 				while(iterator.hasNext())
@@ -1484,7 +1585,19 @@
 							
 					
 				}
+				//here delete unit from database that user deleted from tableView of unit
+				Iterator itemUnitIterator=itemUnitListDeleted.iterator();
+				System.out.println("itemUnitListDeleted.size="+itemUnitListDeleted.size()+"@@@@@@@@@@@@@@@@@@@@@@@@@@");
+				while(itemUnitIterator.hasNext()) {
+					ItemUnit itemUnit=(ItemUnit)itemUnitIterator.next();
+					//if(itemUnitService.find(itemUnit.getId())!=null)
+					if(itemUnit.getItem()!=null)
+					itemUnitService.delete(itemUnit);
+				}
+				flagSave=false;
+				
 				storeItemListModified.clear();
+				itemUnitListDeleted.clear();
 				System.out.println("The invoiceItemList size ="+invoiceItemList.size());
 
 			
@@ -1506,6 +1619,28 @@
 	
 	
 	
+	private void getAllItems() {
+		
+		Pageable paging1 = new PageRequest(0, 5);  //Sort.by("itemId")
+		
+		System.out.println("+++++++++"+paging1.getPageSize());
+		//System.out.println("+++++++++"+paging1.next());
+		//System.out.println("+++++++++"+paging1.);
+		
+        Page<Item> pagedResult = itemService.findAll(paging1);
+        
+        pagedResult.forEach(System.out::println);
+        System.out.println("+++++++++pagedResult.getTotalElements()"+pagedResult.getTotalElements());
+        System.out.println("+++++++++pagedResult.getNumberOfElements()"+pagedResult.getNumberOfElements());
+        System.out.println("+++++++++pagedResult.getSize()"+pagedResult.getSize());
+        System.out.println("+++++++++pagedResult.getTotalPages()"+pagedResult.getTotalPages());
+        System.out.println("+++++++++pagedResult.getSort()"+pagedResult.getSort());
+       
+       
+        }
+        
+        
+
 	
 	
 	}

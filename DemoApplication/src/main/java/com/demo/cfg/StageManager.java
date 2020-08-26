@@ -2,7 +2,6 @@ package com.demo.cfg;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.awt.Dialog.ModalityType;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -12,11 +11,13 @@ import org.springframework.context.ApplicationContext;
 import com.demo.view.FxmlView;
 
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
 
 /**
  * Manages switching Scenes on the Primary Stage
@@ -30,11 +31,13 @@ public class StageManager {
     public StageManager(SpringFXMLLoader springFXMLLoader, Stage stage) {
         this.springFXMLLoader = springFXMLLoader;
         this.primaryStage = new Stage();
+        
     }
 
     public void switchScene(final FxmlView view) {
         Parent viewRootNodeHierarchy = loadViewNodeHierarchy(view.getFxmlFile());
         show(viewRootNodeHierarchy, view.getTitle());
+        
     }
     
     private void show(final Parent rootnode, String title) {
@@ -46,6 +49,11 @@ public class StageManager {
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
+        primaryStage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.E));
+        primaryStage.setFullScreen(true);
+        
+        
+        
         
         try {
             primaryStage.show();
@@ -71,7 +79,7 @@ public class StageManager {
      *
      * @return Parent root node of the FXML document hierarchy
      */
-    private Parent loadViewNodeHierarchy(String fxmlFilePath) {
+    public Parent loadViewNodeHierarchy(String fxmlFilePath) {
         Parent rootNode = null;
         try {
             rootNode = springFXMLLoader.load(fxmlFilePath);
@@ -95,7 +103,9 @@ public class StageManager {
 		
 		Parent root1 = null;
 		try {
+			
 			root1 = fxmlLoader.load();
+			
 		} catch (IOException e) {
 			logAndExit("Unable to load FXML view" + view.getFxmlFile(), e);
 
