@@ -24,9 +24,23 @@
 /*-fx-font-family: "Times New Roman";*/
 	-fx-font-family: "Hacen Liner Screen Bd";
 	-fx-font-size:18px;
-	  -fx-font-style: oblique;
-	  	
+	-fx-font-style: oblique;
+	
 }
+
+.generalFont.border{
+	-fx-fill:transparent;
+	-fx-border-color:red;
+	-fx-border-width:6;
+	/* -fx-stroke-color:green;
+	-fx-stroke-width:5;
+	-fx-stroke-dash-array:12 2 4 2;
+	-fx-stroke-dash-offset:6;
+	-fx-stroke-line-cap:butt; */
+
+	
+}
+
 .button.btnFont{
 
 /*-fx-font-family: "Times New Roman";*/
@@ -142,3 +156,4 @@
 		  -fx-font-style: oblique;
 	
 }
+.generalfont.

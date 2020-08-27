@@ -1,5 +1,6 @@
 package com.demo.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import com.demo.bean.Item;
 import com.demo.cfg.StageManager;
 import com.demo.service.ItemService;
 import com.demo.util.AlertUtil;
+import com.demo.util.ExceptionUtil;
 import com.demo.view.FxmlView;
 
 import javafx.application.Platform;
@@ -27,7 +29,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
@@ -36,7 +37,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 @Controller
 public class GoodsController implements Initializable{
 
@@ -206,14 +209,43 @@ public class GoodsController implements Initializable{
 	});
 		
 	}
+	Stage stage2;
 	@FXML
-	private void handleGoodsAction(ActionEvent e) {
+	private void handleGoodsAction(ActionEvent e) throws ExceptionUtil{
 		if (e.getSource()==btnNewItem) {
-			stageManager.switchScene2(ac,FxmlView.ADDNEWITEM).show();
+			stage2=stageManager.switchScene2(ac,FxmlView.ADDNEWITEM);
+			stage2.show();
+			
+			 stage2.setOnCloseRequest(event->{
+				 try {
+					 addNewItemController.cancle(null);
+			  }catch(IOException ioe) {	  }			  
+			  });
+			 
+				/*
+				 * stage2.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				 * 
+				 * @Override public void handle(WindowEvent arg0) { try { System.out.println(
+				 * "MMMMMMMMMMMMMMMMMMXXXXXXXXXXXXXXXXZZZZZZZZZZZZZZZ77777777777777777733333333333333333AAAAAAAAAAAAAAAAAAZZZZZZZZ"
+				 * ); addNewItemController.cancle(null); } catch(IOException ioe) {
+				 * 
+				 * }
+				 * 
+				 * }});
+				 */
+			
 		}else if (e.getSource()==btnUpdateItem){
 			
-			//s.show();
-			stageManager.switchScene2(ac,FxmlView.ADDNEWITEM).show();
+			
+			stage2=stageManager.switchScene2(ac,FxmlView.ADDNEWITEM);
+			stage2.show();
+			
+			 stage2.setOnCloseRequest(event->{
+				 try {
+					 addNewItemController.cancle(null);
+			  }catch(IOException ioe) {	  }			  
+			  });
+			 
 			String itemId=String.valueOf(tbItems.getSelectionModel().getSelectedItem().getItemId());
 			addNewItemController.setTxtItemId(itemId);
 			addNewItemController.showItemDetials(itemId);

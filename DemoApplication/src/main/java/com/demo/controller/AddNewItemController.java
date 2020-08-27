@@ -47,7 +47,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -64,9 +63,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
 	
@@ -189,7 +190,7 @@ import javafx.util.converter.DoubleStringConverter;
 		    	txtItemId.setText(itemId);
 		    }
 			//this instance will contain Scound stage that will be return from <== stageManager.switchScene2(..)
-		   private Stage stage2;
+		     private Stage stage2;
 		 
 		    private  ObservableList<StoreItem> getStoreNamesList() {
 		    	List<Store> stores=storeService.findAllByActiveIs(true);
@@ -210,8 +211,8 @@ import javafx.util.converter.DoubleStringConverter;
 				item=myItem;
 				return storeItemData;
 		    }
+		   
 		    
-		  //  public static final KeyCodeCombination saveShortcut=new 
 		    @Override
 		    public void initialize(URL location, ResourceBundle resources) {
 		    	
@@ -239,9 +240,11 @@ import javafx.util.converter.DoubleStringConverter;
 		    		
 		    	});
 		    	
+		    
+		    	
 	//============================================================================
 	//Delete UnitRow 	    	
-		    	tbItemUnit.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		    		tbItemUnit.setOnKeyPressed(new EventHandler<KeyEvent>() {
 					@Override
 					public void handle(KeyEvent keyEvent) {
 						if (keyEvent.getCode()==KeyCode.DELETE) {
@@ -257,7 +260,7 @@ import javafx.util.converter.DoubleStringConverter;
 		    	  	});
 		    	
 		   			
-					  txtItemId.setOnAction(new EventHandler<ActionEvent>() {
+					txtItemId.setOnAction(new EventHandler<ActionEvent>() {
 					  
 					  @Override 
 					  public void handle(ActionEvent event) {
@@ -637,7 +640,7 @@ import javafx.util.converter.DoubleStringConverter;
 			return isExits;
 		}
 		@FXML
-		private void cancle(ActionEvent e) throws IOException{
+		public void cancle(ActionEvent e) throws IOException{
 			Stage stage = (Stage) btnItemCancel.getScene().getWindow();
 			  //  stage.close();
 			    stage.hide();

@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javafx.stage.StageStyle;
 /**
  * Manages switching Scenes on the Primary Stage
  */
@@ -111,8 +112,11 @@ public class StageManager {
 
 		}
 		Stage stage = new Stage();
+		//stage.initStyle(StageStyle.UNDECORATED);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(view.getTitle());
+		//Remove max
+		stage.setResizable(false);
 		stage.setScene(new Scene(root1));
 		
 		stage.show();
